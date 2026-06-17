@@ -1,0 +1,20 @@
+crawler:
+  user_agent: "RicePestRAGCrawler/0.1 academic project"
+  request_timeout_seconds: 25
+  delay_seconds_per_domain: 1.5
+  max_urls_per_class: 20
+  max_depth: 1
+  min_text_chars: 500
+  min_url_score: 6
+
+output:
+  raw_html_dir: "data/raw/html"
+  raw_pdf_dir: "data/raw/pdf"
+  parsed_documents_path: "data/parsed/documents.jsonl"
+  pest_profiles_path: "data/parsed/pest_profiles.jsonl"
+  chunks_path: "data/rag/chunks.jsonl"
+  local_context_documents_path: "data/parsed/local_context_documents.jsonl"
+  local_context_chunks_path: "data/rag/local_context_chunks.jsonl"
+  all_chunks_path: "data/rag/all_chunks.jsonl"
+  error_log_path: "data/logs/crawl_errors.jsonl"
+  rejected_urls_path: "data/logs/rejected_urls.jsonl"

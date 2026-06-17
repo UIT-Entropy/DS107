@@ -1,0 +1,43 @@
+allowlist_domains:
+  tier_1:
+    - "knowledgebank.irri.org"
+    - "www.knowledgebank.irri.org"
+    - "irri.org"
+    - "www.irri.org"
+    - "fao.org"
+    - "www.fao.org"
+    - "openknowledge.fao.org"
+    - "plantwiseplusknowledgebank.org"
+    - "www.plantwiseplusknowledgebank.org"
+
+  tier_2:
+    - "cabidigitallibrary.org"
+    - "www.cabidigitallibrary.org"
+    - "knowledgebank-brri.org"
+    - "www.knowledgebank-brri.org"
+    - "lsuagcenter.com"
+    - "www.lsuagcenter.com"
+    - "ipm.ucanr.edu"
+    - "ucanr.edu"
+    - "www.ucanr.edu"
+    - "khuyennongvn.gov.vn"
+    - "www.khuyennongvn.gov.vn"
+    - "agritech.tnau.ac.in"
+    - "niphm.gov.in"
+
+blocked_domains:
+  - "facebook.com"
+  - "youtube.com"
+  - "tiktok.com"
+  - "shopee.vn"
+  - "lazada.vn"
+  - "amazon.com"
+
+blocked_url_keywords:
+  - "shop"
+  - "cart"
+  - "buy"
+  - "product"
+  - "pesticide-sale"
+  - "login"
+  - "signup"

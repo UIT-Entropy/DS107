@@ -1,0 +1,204 @@
+pests:
+  normal:
+    label: "normal"
+    common_names_en:
+      - "healthy rice"
+      - "normal rice"
+      - "no visible pest"
+      - "no visible pest damage"
+    common_names_vi:
+      - "lúa khỏe"
+      - "lua khoe"
+      - "không phát hiện sâu hại"
+      - "khong phat hien sau hai"
+    scientific_names:
+      - "Oryza sativa"
+    search_terms:
+      - "healthy rice plant"
+      - "normal rice plant"
+      - "rice crop monitoring no pest"
+
+  asiatic_rice_borer:
+    label: "asiatic_rice_borer"
+    common_names_en:
+      - "Asiatic rice borer"
+      - "striped rice stem borer"
+      - "rice stem borer"
+    common_names_vi:
+      - "sâu đục thân lúa"
+      - "sau duc than lua"
+      - "sâu đục thân hai chấm"
+      - "sau duc than hai cham"
+    scientific_names:
+      - "Chilo suppressalis"
+    search_terms:
+      - "Asiatic rice borer rice pest"
+      - "striped rice stem borer rice"
+      - "Chilo suppressalis rice"
+      - "Chilo suppressalis IPM"
+
+  brown_plant_hopper:
+    label: "brown_plant_hopper"
+    common_names_en:
+      - "brown planthopper"
+      - "brown plant hopper"
+      - "BPH"
+    common_names_vi:
+      - "rầy nâu"
+      - "ray nau"
+    scientific_names:
+      - "Nilaparvata lugens"
+    search_terms:
+      - "brown planthopper rice"
+      - "brown plant hopper rice"
+      - "Nilaparvata lugens rice"
+      - "Nilaparvata lugens IPM"
+
+  paddy_stem_maggot:
+    label: "paddy_stem_maggot"
+    common_names_en:
+      - "paddy stem maggot"
+      - "rice stem maggot"
+      - "rice whorl maggot"
+    common_names_vi:
+      - "ruồi đục nõn lúa"
+      - "ruoi duc non lua"
+      - "sau nan"
+    scientific_names:
+      - "Hydrellia sasakii"
+      - "Chlorops oryzae"
+    search_terms:
+      - "paddy stem maggot rice"
+      - "rice stem maggot"
+      - "rice whorl maggot"
+      - "Hydrellia sasakii rice"
+      - "Chlorops oryzae rice"
+
+  rice_gall_midge:
+    label: "rice_gall_midge"
+    common_names_en:
+      - "rice gall midge"
+      - "Asian rice gall midge"
+    common_names_vi:
+      - "muỗi hành"
+      - "muoi hanh"
+      - "sâu năn"
+      - "sau nan"
+    scientific_names:
+      - "Orseolia oryzae"
+    search_terms:
+      - "rice gall midge"
+      - "Asian rice gall midge"
+      - "Orseolia oryzae rice"
+      - "Orseolia oryzae IPM"
+
+  rice_leaf_caterpillar:
+    label: "rice_leaf_caterpillar"
+    common_names_en:
+      - "rice leaf caterpillar"
+      - "green rice caterpillar"
+      - "rice green semilooper"
+    common_names_vi:
+      - "sâu ăn lá lúa"
+      - "sau an la lua"
+    scientific_names:
+      - "Naranga aenescens"
+    search_terms:
+      - "rice leaf caterpillar"
+      - "green rice caterpillar"
+      - "Naranga aenescens rice"
+      - "rice green semilooper"
+
+  rice_leaf_hopper:
+    label: "rice_leaf_hopper"
+    common_names_en:
+      - "rice leafhopper"
+      - "green leafhopper"
+      - "green rice leafhopper"
+    common_names_vi:
+      - "rầy xanh"
+      - "ray xanh"
+      - "rầy xanh đuôi đen"
+      - "ray xanh duoi den"
+    scientific_names:
+      - "Nephotettix spp."
+      - "Nephotettix cincticeps"
+      - "Nephotettix virescens"
+    search_terms:
+      - "rice leafhopper"
+      - "green leafhopper rice"
+      - "Nephotettix rice"
+      - "Nephotettix virescens rice"
+
+  rice_leaf_roller:
+    label: "rice_leaf_roller"
+    common_names_en:
+      - "rice leaf roller"
+      - "rice leaffolder"
+      - "rice leaf folder"
+      - "leaf folder"
+    common_names_vi:
+      - "sâu cuốn lá lúa"
+      - "sau cuon la lua"
+      - "sâu cuốn lá nhỏ"
+    scientific_names:
+      - "Cnaphalocrocis medinalis"
+    search_terms:
+      - "rice leaf roller"
+      - "rice leaffolder"
+      - "rice leaf folder"
+      - "Cnaphalocrocis medinalis rice"
+
+  rice_water_weevil:
+    label: "rice_water_weevil"
+    common_names_en:
+      - "rice water weevil"
+    common_names_vi:
+      - "mọt nước hại lúa"
+      - "mot nuoc hai lua"
+      - "mọt nước"
+    scientific_names:
+      - "Lissorhoptrus oryzophilus"
+    search_terms:
+      - "rice water weevil"
+      - "Lissorhoptrus oryzophilus rice"
+      - "rice water weevil management"
+
+  small_brown_plant_hopper:
+    label: "small_brown_plant_hopper"
+    common_names_en:
+      - "small brown planthopper"
+      - "small brown plant hopper"
+      - "SBPH"
+    common_names_vi:
+      - "rầy lưng trắng nhỏ"
+      - "ray lung trang nho"
+      - "rầy nâu nhỏ"
+      - "ray nau nho"
+    scientific_names:
+      - "Laodelphax striatellus"
+    search_terms:
+      - "small brown planthopper rice"
+      - "small brown plant hopper rice"
+      - "Laodelphax striatellus rice"
+      - "Laodelphax striatellus IPM"
+
+  yellow_rice_borer:
+    label: "yellow_rice_borer"
+    common_names_en:
+      - "yellow rice borer"
+      - "yellow stem borer"
+      - "rice yellow stem borer"
+      - "stem borer"
+    common_names_vi:
+      - "sâu đục thân vàng"
+      - "sau duc than vang"
+      - "sâu đục thân lúa"
+      - "sau duc than lua"
+    scientific_names:
+      - "Scirpophaga incertulas"
+    search_terms:
+      - "yellow rice borer"
+      - "yellow stem borer rice"
+      - "Scirpophaga incertulas rice"
+      - "Scirpophaga incertulas IPM"

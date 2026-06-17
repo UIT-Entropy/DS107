@@ -1,0 +1,6 @@
+data/*.jsonl
+data/*.meta.json
+data/sessions/
+.env
+__pycache__/
+**/__pycache__/

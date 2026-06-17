@@ -1,0 +1,200 @@
+sources:
+  normal:
+    - source_org: "Trung tam Khuyen nong Quoc gia"
+      url: "https://khuyennongvn.gov.vn/thien-tai-dich-hai/quang-tri-tang-cuong-cham-soc-lua-truoc-trong-sau-tro-31028.html"
+      source_relation: "exact"
+      relation_note: "Normal crop-care advisory for rice growth stages; use when no clear pest damage is detected."
+      relevance_terms:
+        - "chăm sóc lúa"
+        - "trước trổ"
+        - "sau trổ"
+        - "bón phân"
+        - "điều tiết nước"
+    - source_org: "Trung tam Khuyen nong Quoc gia"
+      url: "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/ky-thuat-canh-tac-lua-chat-luong-cao-va-phat-thai-thap-vung-dong-bang-song-cuu-long-31656.html"
+      source_relation: "exact"
+      relation_note: "Normal crop-management advisory for healthy rice cultivation and water/fertilizer management."
+      relevance_terms:
+        - "kỹ thuật canh tác"
+        - "quản lý nước"
+        - "bón phân"
+        - "gieo sạ"
+        - "lúa chất lượng cao"
+
+  asiatic_rice_borer:
+    - source_org: "TNAU"
+      url: "https://agritech.tnau.ac.in/expert_system/paddy/cppests_SB.html"
+      source_relation: "related"
+      relation_note: "Related stem-borer group advisory. Source is a stem borer page and may not specifically describe Chilo suppressalis."
+      relevance_terms:
+        - "stem borer"
+        - "dead heart"
+        - "white ear"
+    - source_org: "Trung tam Khuyen nong Quoc gia"
+      url: "https://khuyennongvn.gov.vn/thien-tai-dich-hai/bac-giang-chi-dao-phong-tru-sau-duc-than-hai-cham-ray-nau-va-sau-cuon-la-nho-hai-lua-mua-12700.html"
+      source_relation: "exact"
+      relevance_terms:
+        - "sâu đục thân hai chấm"
+        - "sâu đục thân"
+        - "bông bạc"
+        - "dảnh héo"
+    - source_org: "Trung tam Khuyen nong Quoc gia"
+      url: "https://khuyennongvn.gov.vn/thien-tai-dich-hai/phong-chong-sinh-vat-gay-hai-vu-lua-dong-xuan-20212022-cac-tinh-phia-bac-21838.html"
+      source_relation: "related"
+      relation_note: "Vietnam regional multi-pest advisory that includes rice stem borer context."
+      relevance_terms:
+        - "sâu đục thân"
+        - "sâu bệnh hại lúa"
+
+  brown_plant_hopper:
+    - source_org: "IRRI"
+      url: "https://www.knowledgebank.irri.org/training/fact-sheets/pest-management/insects"
+    - source_org: "TNAU"
+      url: "https://agritech.tnau.ac.in/expert_system/paddy/cppests_BPH.html"
+    - source_org: "Trung tam Khuyen nong Quoc gia"
+      url: "https://khuyennongvn.gov.vn/thien-tai-dich-hai/dich-ray-nau-co-nguy-co-lan-rong-17995.html"
+      source_relation: "exact"
+      relevance_terms:
+        - "rầy nâu"
+        - "cháy rầy"
+    - source_org: "Trung tam Khuyen nong Quoc gia"
+      url: "https://khuyennongvn.gov.vn/thien-tai-dich-hai/tang-cuong-phong-chong-ray-nau-benh-vang-lun-lun-xoan-la-hai-lua-17043.html"
+      source_relation: "exact"
+      relevance_terms:
+        - "rầy nâu"
+        - "lùn xoắn lá"
+        - "vàng lùn"
+    - source_org: "Trung tam Khuyen nong Quoc gia"
+      url: "https://khuyennongvn.gov.vn/thien-tai-dich-hai/quang-binh-nhieu-dien-tich-lua-bi-nhiem-ray-nau-14013.html"
+      source_relation: "exact"
+      relevance_terms:
+        - "rầy nâu"
+        - "lúa bị nhiễm rầy"
+    - source_org: "Trung tam Khuyen nong Quoc gia"
+      url: "https://khuyennongvn.gov.vn/thien-tai-dich-hai/bac-giang-chi-dao-phong-tru-sau-duc-than-hai-cham-ray-nau-va-sau-cuon-la-nho-hai-lua-mua-12700.html"
+      source_relation: "exact"
+      relevance_terms:
+        - "rầy nâu"
+        - "phòng trừ rầy nâu"
+
+  paddy_stem_maggot:
+    - source_org: "TNAU"
+      url: "https://agritech.tnau.ac.in/expert_system/paddy/cppests_whorlmaggot.html"
+
+  rice_gall_midge:
+    - source_org: "TNAU"
+      url: "https://agritech.tnau.ac.in/expert_system/paddy/cppests_gallmidge.html"
+    - source_org: "Trung tam Khuyen nong Quoc gia"
+      url: "https://khuyennongvn.gov.vn/thien-tai-dich-hai/canh-giac-sau-nan-gay-hai-tren-lua-thu-dong-17388.html"
+      source_relation: "exact"
+      relevance_terms:
+        - "sâu năn"
+        - "muỗi hành"
+        - "lúa thu đông"
+
+  rice_leaf_caterpillar:
+    - source_org: "TNAU"
+      url: "https://agritech.tnau.ac.in/expert_system/paddy/cppests_yellowhairy.html"
+      source_relation: "related"
+      relation_note: "Related leaf-feeding caterpillar advisory. Source describes yellow hairy caterpillar, not necessarily Naranga aenescens."
+      relevance_terms:
+        - "yellow hairy caterpillar"
+        - "caterpillar"
+        - "defoliation"
+    - source_org: "Trung tam Khuyen nong Quoc gia"
+      url: "https://khuyennongvn.gov.vn/tu-van-hoi-dap/bien-phap-phong-tru-sau-can-pha-lua-giai-doan-lam-dong-9733.html"
+      source_relation: "related"
+      relation_note: "Vietnam farmer Q&A for leaf/stem-feeding caterpillars at panicle initiation; field confirmation is needed because this is not necessarily Naranga aenescens."
+      relevance_terms:
+        - "sâu cắn phá lúa"
+        - "sâu ăn lá"
+        - "làm đòng"
+
+  rice_leaf_hopper:
+    - source_org: "TNAU"
+      url: "https://agritech.tnau.ac.in/expert_system/paddy/cppests_GLH.html"
+
+  rice_leaf_roller:
+    - source_org: "IRRI"
+      url: "https://www.knowledgebank.irri.org/training/fact-sheets/pest-management/insects"
+    - source_org: "TNAU"
+      url: "https://agritech.tnau.ac.in/expert_system/paddy/cppests_lf.html"
+    - source_org: "Trung tam Khuyen nong Quoc gia"
+      url: "https://khuyennongvn.gov.vn/thien-tai-dich-hai/nam-dinh-bung-phat-dich-sau-cuon-la-nho-14693.html"
+      source_relation: "exact"
+      relevance_terms:
+        - "sâu cuốn lá nhỏ"
+        - "sâu cuốn lá"
+    - source_org: "Trung tam Khuyen nong Quoc gia"
+      url: "https://khuyennongvn.gov.vn/thien-tai-dich-hai/thanh-hoa-tap-trung-chi-dao-phong-tru-sau-cuon-la-hai-lua-vu-mua-2016-14412.html"
+      source_relation: "exact"
+      relevance_terms:
+        - "sâu cuốn lá"
+        - "phòng trừ sâu cuốn lá"
+    - source_org: "Trung tam Khuyen nong Quoc gia"
+      url: "https://khuyennongvn.gov.vn/thien-tai-dich-hai/tuyen-quang-tap-trung-phong-tru-sau-cuon-la-nho-hai-lua-mua-12629.html"
+      source_relation: "exact"
+      relevance_terms:
+        - "sâu cuốn lá nhỏ"
+        - "hại lúa mùa"
+    - source_org: "Trung tam Khuyen nong Quoc gia"
+      url: "https://khuyennongvn.gov.vn/thien-tai-dich-hai/bac-giang-chi-dao-phong-tru-sau-duc-than-hai-cham-ray-nau-va-sau-cuon-la-nho-hai-lua-mua-12700.html"
+      source_relation: "exact"
+      relevance_terms:
+        - "sâu cuốn lá nhỏ"
+        - "sâu cuốn lá"
+    - source_org: "Trung tam Khuyen nong Quoc gia"
+      url: "https://khuyennongvn.gov.vn/tu-van-hoi-dap/bien-phap-phong-tru-sau-cuon-la-cho-lua-10437.html"
+      source_relation: "exact"
+      relevance_terms:
+        - "sâu cuốn lá"
+        - "phòng trừ sâu cuốn lá"
+        - "lúa"
+
+  rice_water_weevil:
+    - source_org: "UC IPM"
+      url: "https://ipm.ucanr.edu/agriculture/rice/rice-water-weevil/"
+    - source_org: "LSU AgCenter"
+      url: "https://www.lsuagcenter.com/topics/crops/rice/insects/presentations/1-rice-water-weevil"
+    - source_org: "Trung tam Khuyen nong Quoc gia"
+      url: "https://khuyennongvn.gov.vn/thien-tai-dich-hai/bao-yen-khan-truong-phong-tru-mot-nuoc-hai-lua-xuan-nam-2020-19920.html"
+      source_relation: "exact"
+      relevance_terms:
+        - "mọt nước"
+        - "mọt nước hại lúa"
+
+  small_brown_plant_hopper:
+    - source_org: "TNAU"
+      url: "https://agritech.tnau.ac.in/expert_system/paddy/cppests_WBPH.html"
+      source_relation: "related"
+      relation_note: "Related planthopper advisory. Source describes white-backed plant hopper, not Laodelphax striatellus."
+      relevance_terms:
+        - "white backed plant hopper"
+        - "plant hopper"
+        - "hopper burn"
+    - source_org: "Trung tam Khuyen nong Quoc gia"
+      url: "https://khuyennongvn.gov.vn/thien-tai-dich-hai/cong-dien-phong-chong-ray-lung-trang-benh-lun-soc-den-hai-lua-vu-mua-2018-tai-mot-so-tinh-phia-bac-17328.html"
+      source_relation: "related"
+      relation_note: "Vietnam advisory for white-backed planthopper, a related planthopper; not Laodelphax striatellus."
+      relevance_terms:
+        - "rầy lưng trắng"
+        - "bệnh lùn sọc đen"
+    - source_org: "Trung tam Khuyen nong Quoc gia"
+      url: "https://khuyennongvn.gov.vn/thien-tai-dich-hai/binh-dinh-dap-diet-ray-nau--ray-lung-trang-bao-ve-lua-dong-xuan-tai-phu-cat-11693.html"
+      source_relation: "related"
+      relation_note: "Vietnam advisory for brown and white-backed planthopper, a related planthopper context."
+      relevance_terms:
+        - "rầy lưng trắng"
+        - "rầy nâu"
+        - "bảo vệ lúa"
+
+  yellow_rice_borer:
+    - source_org: "TNAU"
+      url: "https://agritech.tnau.ac.in/expert_system/paddy/cppests_SB.html"
+    - source_org: "Trung tam Khuyen nong Quoc gia"
+      url: "https://khuyennongvn.gov.vn/thien-tai-dich-hai/cham-soc-va-phong-chong-sinh-vay-gay-hai-tren-lua-he-thu-mua-2025-31361.html"
+      source_relation: "related"
+      relation_note: "Vietnam multi-pest rice advisory that includes rice stem borer context."
+      relevance_terms:
+        - "sâu đục thân"
+        - "sâu bệnh hại lúa"
