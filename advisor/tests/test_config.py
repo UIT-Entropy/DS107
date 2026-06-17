@@ -1,4 +1,11 @@
-from advisor.config import AdvisorPaths, load_config
+from advisor.config import AdvisorPaths, find_workspace_root, load_config
+
+
+def test_workspace_root_is_detected_from_module_path():
+    root = find_workspace_root()
+
+    assert (root / "advisor").is_dir()
+    assert (root / "rice_pest_crawler").is_dir()
 
 
 def test_path_overrides_resolve_from_workspace_root():

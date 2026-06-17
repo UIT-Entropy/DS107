@@ -72,6 +72,19 @@ MODEL_PROFILES = {
 }
 
 
+def find_workspace_root(start: str | Path | None = None) -> Path:
+    current = Path(start) if start is not None else Path(__file__)
+    current = current.resolve()
+    if current.is_file():
+        current = current.parent
+
+    for candidate in (current, *current.parents):
+        if (candidate / "advisor").is_dir() and (candidate / "rice_pest_crawler").is_dir():
+            return candidate
+
+    return Path(__file__).resolve().parents[1]
+
+
 @dataclass(frozen=True)
 class AdvisorPaths:
     workspace_root: Path
@@ -85,7 +98,7 @@ class AdvisorPaths:
 
     @classmethod
     def default(cls) -> "AdvisorPaths":
-        workspace_root = Path(__file__).resolve().parents[1]
+        workspace_root = find_workspace_root()
         advisor_root = workspace_root / "advisor"
         crawler_root = workspace_root / "rice_pest_crawler"
         data_dir = advisor_root / "data"

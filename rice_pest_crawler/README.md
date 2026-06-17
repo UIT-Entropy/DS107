@@ -1,61 +1,82 @@
 # Rice Pest Crawler
 
-Curated crawler for rice pest advisory RAG data. The MVP uses manual seed URLs, trusted allowlisted sources, rule-based extraction, and JSONL outputs.
+Crawler tạo dữ liệu RAG cho advisor sâu hại lúa.
 
-## Setup
+Crawler chỉ phụ trách thu thập, trích xuất và build chunks. Phần hỏi đáp dùng Gemini nằm ở `advisor`.
 
-```bash
-cd rice_pest_crawler
-python -m pip install -r requirements.txt
+## Cài Đặt
+
+Chạy từ repo root:
+
+```powershell
+cd DS107
+python -m pip install -r rice_pest_crawler\requirements.txt
 ```
 
-## Usage
+## Chạy Pipeline
 
-```bash
-python scripts/run_discovery.py --all
-python scripts/run_crawl.py --class-id brown_plant_hopper
-python scripts/run_crawl.py --all
-python scripts/run_extract.py --all
-python scripts/build_chunks.py
-python scripts/audit_quality.py
-python scripts/run_local_context.py
-python scripts/build_all_chunks.py
-python scripts/audit_sources.py
+```powershell
+python rice_pest_crawler\scripts\run_discovery.py --all
+python rice_pest_crawler\scripts\run_crawl.py --all
+python rice_pest_crawler\scripts\run_extract.py --all
+python rice_pest_crawler\scripts\build_chunks.py
+python rice_pest_crawler\scripts\run_local_context.py
+python rice_pest_crawler\scripts\build_all_chunks.py
+python rice_pest_crawler\scripts\audit_sources.py
 ```
 
-Outputs:
+Chạy riêng một class:
 
-- `data/parsed/documents.jsonl`
-- `data/parsed/pest_profiles.jsonl`
-- `data/rag/chunks.jsonl`
-- `data/rag/local_context_chunks.jsonl`
-- `data/rag/all_chunks.jsonl`
-- `data/logs/crawl_errors.jsonl`
-- `data/logs/rejected_urls.jsonl`
-- `data/logs/profile_quality.jsonl`
-- `data/logs/class_quality.jsonl`
-- `data/logs/source_inventory.md`
+```powershell
+python rice_pest_crawler\scripts\run_crawl.py --class-id brown_plant_hopper
+```
 
-## Advisory Readiness
+## Output Chính
 
-Use `audit_quality.py` after every crawl. A profile is considered advisory-ready only when it comes from an exact trusted source and has at least identity, damage/symptoms, and IPM management content. Related/group sources can be actionable but require identity confirmation in the final answer. Taxonomy-only fallback profiles are kept in `pest_profiles.jsonl` for class coverage, but they are not emitted as RAG chunks.
+```text
+rice_pest_crawler\data\parsed\documents.jsonl
+rice_pest_crawler\data\parsed\pest_profiles.jsonl
+rice_pest_crawler\data\rag\chunks.jsonl
+rice_pest_crawler\data\rag\local_context_chunks.jsonl
+rice_pest_crawler\data\rag\all_chunks.jsonl
+rice_pest_crawler\data\logs\source_inventory.md
+```
 
-For final Q&A, treat `profile_quality.jsonl` as a guardrail:
+`all_chunks.jsonl` là file advisor dùng để build embedding index.
 
-- `strong` / `usable`: Qwen can answer with citations and local-label pesticide cautions.
-- `related_usable`: Qwen can give group-level steps, but must say the source is for a related pest group and field confirmation is needed.
-- `weak`: Qwen should say the crawler has incomplete advisory detail and avoid full treatment workflows.
-- `taxonomy_only`: Qwen should identify the class only and ask for more field evidence or curated sources.
+## Path
 
-## Notes
+Path được tự resolve theo thư mục `rice_pest_crawler`, nên có thể chạy script từ repo root mà không cần `cd` vào crawler.
 
-- This is a curated crawler, not a broad web crawler.
-- It does not bypass CAPTCHA, login pages, or paywalls.
-- Chemical control text is stored separately from general IPM advice.
-- Exact pesticide dosage should not be surfaced unless present in an official local source.
+Config:
 
-## Tests
+```text
+rice_pest_crawler\config\crawler.yaml
+rice_pest_crawler\config\manual_sources.yaml
+rice_pest_crawler\config\local_context_sources.yaml
+rice_pest_crawler\config\pest_taxonomy.yaml
+```
 
-```bash
-python -m pytest
+## Guardrail Dữ Liệu
+
+Chạy audit sau khi crawl:
+
+```powershell
+python rice_pest_crawler\scripts\audit_quality.py
+python rice_pest_crawler\scripts\audit_sources.py
+```
+
+Ý nghĩa grade trong log:
+
+```text
+strong / usable   dùng tốt cho RAG
+related_usable    nguồn cùng nhóm, cần xác nhận ngoài ruộng
+weak              thiếu chi tiết, không nên trả lời quá chắc
+taxonomy_only     chỉ đủ nhận diện class, chưa đủ tư vấn xử lý
+```
+
+## Test
+
+```powershell
+python -m pytest rice_pest_crawler\tests
 ```

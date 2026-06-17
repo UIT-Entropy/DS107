@@ -1,21 +1,32 @@
-# DS107 RAG Rice Pest Advisor
+# DS107
+
+RAG advisor cho sâu hại lúa.
 
 Flow chính:
 
 ```text
-YOLO class_id -> tạo session -> hỏi advisor
+YOLO class_id -> advisor session -> Gemini RAG answer
 ```
 
-## 1. Cài Đặt
+Path được tự dò từ cấu trúc repo, không cần sửa hard-code path sau khi clone.
+
+## 1. Clone Và Cài Đặt
 
 ```powershell
-cd "C:\Users\nguye\OneDrive\Desktop\DS107_RAG"
+git clone https://github.com/UIT-Entropy/DS107.git
+cd DS107
 python -m pip install -r advisor\requirements.txt
 ```
 
-## 2. Điền API Key
+Nếu muốn chạy lại crawler:
 
-Chỉ điền Gemini API key ở:
+```powershell
+python -m pip install -r rice_pest_crawler\requirements.txt
+```
+
+## 2. Điền Gemini API Key
+
+Chỉ điền key ở đúng file này:
 
 ```text
 advisor/api_key.py
@@ -25,7 +36,7 @@ advisor/api_key.py
 GEMINI_API_KEY = "your_api_key_here"
 ```
 
-Kiểm tra:
+Kiểm tra path, key, data:
 
 ```powershell
 python advisor\gemini_rag.py doctor
@@ -33,16 +44,23 @@ python advisor\gemini_rag.py doctor
 
 ## 3. Build Embedding Index
 
-Nếu chưa có index:
+Index không commit lên GitHub. Sau khi pull code mới, build lại:
 
 ```powershell
 python advisor\gemini_rag.py build-index
+python advisor\gemini_rag.py index-info
 ```
 
-Kiểm tra:
+Nguồn chunk mặc định:
 
-```powershell
-python advisor\gemini_rag.py index-info
+```text
+rice_pest_crawler\data\rag\all_chunks.jsonl
+```
+
+Index sinh ra tại:
+
+```text
+advisor\data\gemini_embeddings.jsonl
 ```
 
 ## 4. Tạo Session Từ YOLO
@@ -59,10 +77,10 @@ Nếu có confidence:
 python advisor\gemini_rag.py sessions start ruong-a --class-id brown_plant_hopper --confidence 0.91
 ```
 
-Mapping class id nằm ở:
+Mapping class nằm ở:
 
 ```text
-advisor/config.py -> YOLO_CLASS_LABELS
+advisor\config.py -> YOLO_CLASS_LABELS
 ```
 
 ## 5. Hỏi Advisor
@@ -71,16 +89,16 @@ advisor/config.py -> YOLO_CLASS_LABELS
 python advisor\gemini_rag.py ask "Tôi nên xử lý thế nào?" --session ruong-a
 ```
 
-Checklist ngắn:
-
-```powershell
-python advisor\gemini_rag.py ask "Nói ngắn gọn cho tôi checklist việc cần làm sáng mai ngoài ruộng." --session ruong-a
-```
-
-Muốn xem nguồn RAG:
+Xem nguồn RAG:
 
 ```powershell
 python advisor\gemini_rag.py ask "Tôi nên xử lý thế nào?" --session ruong-a --show-sources
+```
+
+Checklist ngắn:
+
+```powershell
+python advisor\gemini_rag.py ask "Nói ngắn gọn checklist việc cần làm sáng mai ngoài ruộng." --session ruong-a
 ```
 
 ## 6. Quản Lý Session
@@ -92,16 +110,23 @@ python advisor\gemini_rag.py sessions delete ruong-a
 python advisor\gemini_rag.py sessions clear
 ```
 
-## 7. Debug
+## 7. Crawler RAG Data
 
-Xem context được retrieve, chưa gọi Gemini:
+Crawler tạo dữ liệu nguồn cho advisor:
 
 ```powershell
-python advisor\gemini_rag.py retrieve "Cách xử lý rầy nâu?"
+python rice_pest_crawler\scripts\run_discovery.py --all
+python rice_pest_crawler\scripts\run_crawl.py --all
+python rice_pest_crawler\scripts\run_extract.py --all
+python rice_pest_crawler\scripts\build_chunks.py
+python rice_pest_crawler\scripts\run_local_context.py
+python rice_pest_crawler\scripts\build_all_chunks.py
+python rice_pest_crawler\scripts\audit_sources.py
 ```
 
-Chạy test:
+## 8. Test
 
 ```powershell
 python -m pytest advisor\tests
+python -m pytest rice_pest_crawler\tests
 ```

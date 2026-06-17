@@ -6,7 +6,20 @@ from pathlib import Path
 from urllib.parse import urlparse
 
 
-PROJECT_ROOT = Path(__file__).resolve().parents[2]
+def find_project_root(start: str | Path | None = None) -> Path:
+    current = Path(start) if start is not None else Path(__file__)
+    current = current.resolve()
+    if current.is_file():
+        current = current.parent
+
+    for candidate in (current, *current.parents):
+        if (candidate / "config" / "crawler.yaml").is_file() and (candidate / "src" / "crawler").is_dir():
+            return candidate
+
+    return Path(__file__).resolve().parents[2]
+
+
+PROJECT_ROOT = find_project_root()
 
 
 def project_path(path: str | Path) -> Path:
