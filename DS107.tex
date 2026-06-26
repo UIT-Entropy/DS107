@@ -143,9 +143,9 @@ The top-ranked chunks are combined with the user question and session context to
 
 \subsection{Dataset Preparation}
 
-The experiments were conducted on the bounding-box annotated rice pest dataset described in Section~\ref{sec:dataset}. The dataset was divided into training, validation, and test subsets. Data augmentation was applied exclusively to the training set, while the validation and test sets were kept unchanged to ensure a fair evaluation of model generalization.
+The experiments were conducted on the bounding-box annotated rice pest dataset described in Section~\ref{sec:dataset}. The dataset was divided into training, validation, and test subsets. The Roboflow training split includes offline augmentations, while the validation and test sets were kept unchanged to ensure a fair evaluation of model generalization.
 
-To enhance model robustness, mitigate overfitting, and improve generalization, the following augmentation operations were applied: crop (0\% minimum zoom, 20\% maximum zoom); shear ($\pm10^\circ$ horizontal and vertical); saturation ($-25\%$ to $+25\%$); brightness ($-15\%$ to $+15\%$); exposure ($-10\%$ to $+10\%$); blur (up to 2.5 pixels); cutout (3 boxes, 10\% size each); and mosaic. This augmentation process expanded the training set from 2,210 to 6,630 images.
+The offline training augmentations include crop (0\% minimum zoom, 20\% maximum zoom); shear ($\pm10^\circ$ horizontal and vertical); saturation ($-25\%$ to $+25\%$); brightness ($-15\%$ to $+15\%$); exposure ($-10\%$ to $+10\%$); blur (up to 2.5 pixels); cutout (3 boxes, 10\% size each); and mosaic. This process expanded the training split from 2,210 to 6,630 images. No additional custom augmentation policy was manually added in the training script beyond the standard Ultralytics training behavior.
 
 \subsection{Model Variants}
 
@@ -166,7 +166,7 @@ higher-capacity configurations respectively.
 
 \subsection{Training Environment and Configuration}
 
-All experiments were conducted in the Kaggle Notebook environment using an NVIDIA Tesla T4 GPU. The maximum number of training epochs was set to 120, with early stopping (patience = 15). Detection-based variants used either $320 \times 320$ or $416 \times 416$ input resolution. For each experiment, the best checkpoint selected during validation was used for final evaluation on the test set.
+All experiments were conducted in the Kaggle Notebook environment using an NVIDIA Tesla T4 GPU. Models were initialized from pretrained Ultralytics checkpoints and trained with a fixed random seed of 42, deterministic mode enabled, two data-loading workers, automatic batch sizing (\texttt{batch=-1}), and the Ultralytics automatic optimizer setting (\texttt{optimizer=auto}). The maximum number of training epochs was set to 120 with early stopping (patience = 15), except for the YOLOv8n-320 baseline, which was trained for 100 epochs. Detection-based variants used either $320 \times 320$ or $416 \times 416$ input resolution, and mosaic augmentation was closed during the final 10 epochs (\texttt{close\_mosaic=10}). For validation and test evaluation, the selected best checkpoint was evaluated with batch size 16. For example predictions and error analysis, inference used confidence threshold 0.25, NMS IoU threshold 0.70, and at most 20 detections per image.
 
 \subsection{Evaluation Metrics}
 
