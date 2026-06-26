@@ -1,19 +1,44 @@
 # Rice Pest Crawler
 
-Crawler tạo dữ liệu RAG cho advisor sâu hại lúa.
+`rice_pest_crawler/` builds the textual knowledge base used by the advisor. It discovers candidate URLs, downloads source pages/PDFs, extracts pest profiles, builds RAG chunks, adds Vietnamese local-context chunks, and audits source quality.
 
-Crawler chỉ phụ trách thu thập, trích xuất và build chunks. Phần hỏi đáp dùng Gemini nằm ở `advisor`.
+The crawler does not call Gemini and does not generate final answers. Generation is handled by `advisor/`.
 
-## Cài Đặt
+## Setup
 
-Chạy từ repo root:
+Run from the repository root:
 
 ```powershell
-cd DS107
 python -m pip install -r rice_pest_crawler\requirements.txt
 ```
 
-## Chạy Pipeline
+## Configuration
+
+Main config files:
+
+```text
+rice_pest_crawler\config\crawler.yaml
+rice_pest_crawler\config\manual_sources.yaml
+rice_pest_crawler\config\local_context_sources.yaml
+rice_pest_crawler\config\pest_taxonomy.yaml
+```
+
+The pest taxonomy should stay aligned with the YOLO/advisor class ids:
+
+```text
+asiatic_rice_borer
+brown_plant_hopper
+paddy_stem_maggot
+rice_gall_midge
+rice_leaf_caterpillar
+rice_leaf_hopper
+rice_leaf_roller
+rice_water_weevil
+small_brown_plant_hopper
+yellow_rice_borer
+```
+
+## Full Pipeline
 
 ```powershell
 python rice_pest_crawler\scripts\run_discovery.py --all
@@ -23,18 +48,23 @@ python rice_pest_crawler\scripts\build_chunks.py
 python rice_pest_crawler\scripts\run_local_context.py
 python rice_pest_crawler\scripts\build_all_chunks.py
 python rice_pest_crawler\scripts\audit_sources.py
+python rice_pest_crawler\scripts\audit_quality.py
 ```
 
-Chạy riêng một class:
+Run one class only:
 
 ```powershell
 python rice_pest_crawler\scripts\run_crawl.py --class-id brown_plant_hopper
+python rice_pest_crawler\scripts\run_extract.py --class-id brown_plant_hopper
 ```
 
-## Output Chính
+## Outputs
+
+Important generated files:
 
 ```text
 rice_pest_crawler\data\parsed\documents.jsonl
+rice_pest_crawler\data\parsed\local_context_documents.jsonl
 rice_pest_crawler\data\parsed\pest_profiles.jsonl
 rice_pest_crawler\data\rag\chunks.jsonl
 rice_pest_crawler\data\rag\local_context_chunks.jsonl
@@ -42,40 +72,53 @@ rice_pest_crawler\data\rag\all_chunks.jsonl
 rice_pest_crawler\data\logs\source_inventory.md
 ```
 
-`all_chunks.jsonl` là file advisor dùng để build embedding index.
+`all_chunks.jsonl` is the final chunk file consumed by `advisor/gemini_rag.py build-index`.
 
-## Path
+## Current Knowledge Base Summary
 
-Path được tự resolve theo thư mục `rice_pest_crawler`, nên có thể chạy script từ repo root mà không cần `cd` vào crawler.
+The paper reports:
 
-Config:
+- 62 accepted document rows from 52 unique URLs.
+- Main accepted sources: Vietnamese National Agricultural Extension Center and TNAU.
+- Additional targeted pages from UC IPM and LSU AgCenter for specific pests.
+- 278 final chunks:
+  - 134 pest-specific chunks
+  - 144 Vietnamese local-context chunks
 
-```text
-rice_pest_crawler\config\crawler.yaml
-rice_pest_crawler\config\manual_sources.yaml
-rice_pest_crawler\config\local_context_sources.yaml
-rice_pest_crawler\config\pest_taxonomy.yaml
-```
+## Source Quality Guardrails
 
-## Guardrail Dữ Liệu
-
-Chạy audit sau khi crawl:
+Run audits after changing sources or extraction rules:
 
 ```powershell
 python rice_pest_crawler\scripts\audit_quality.py
 python rice_pest_crawler\scripts\audit_sources.py
 ```
 
-Ý nghĩa grade trong log:
+Quality labels used in logs:
 
 ```text
-strong / usable   dùng tốt cho RAG
-related_usable    nguồn cùng nhóm, cần xác nhận ngoài ruộng
-weak              thiếu chi tiết, không nên trả lời quá chắc
-taxonomy_only     chỉ đủ nhận diện class, chưa đủ tư vấn xử lý
+strong / usable   good source for RAG
+related_usable    related source; field confirmation recommended
+weak              limited detail; avoid overconfident answers
+taxonomy_only     useful for class identity, insufficient for management advice
 ```
 
-## Test
+## Chunking
+
+The advisor paper describes structured sections such as:
+
+```text
+identity
+damage_symptoms
+field_diagnosis
+management_ipm
+chemical_control
+warnings
+```
+
+Long sections are chunked for retrieval. Keep section names stable because the advisory benchmark computes Section Hit@5 using these labels.
+
+## Tests
 
 ```powershell
 python -m pytest rice_pest_crawler\tests
