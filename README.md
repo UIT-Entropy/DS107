@@ -10,6 +10,7 @@ Training_Yolo/               Kaggle notebook for YOLO experiments
 Benchmark/                   Advisory retrieval and generation benchmark
 advisor/                     Gemini RAG advisor module
 rice_pest_crawler/           Knowledge-base crawler and chunk builder
+RiceDisease/                 React + FastAPI web app integration
 ```
 
 ## Current Paper Scope
@@ -171,6 +172,34 @@ Key settings reflected in the paper:
 - Batch: automatic Ultralytics batch sizing (`batch=-1`)
 - Optimizer: `auto`
 - Inference/error-analysis confidence: 0.25
+
+## Web App Integration
+
+The integrated demo app is in `RiceDisease/`.
+
+```text
+RiceDisease/backend/                 FastAPI API for prediction and chat
+RiceDisease/frontend/                React + Vite chat interface
+RiceDisease/DS107_CVModule-main/     YOLO11s inference wrapper and selected weight
+```
+
+The backend imports the repository-root `advisor/` module directly. The older copied folder `RiceDisease/DS107-main/` is ignored and should not be used as the source of truth.
+
+Run the backend:
+
+```powershell
+cd RiceDisease\backend
+python -m pip install -r requirements.txt
+python -m uvicorn main:app --reload
+```
+
+Run the frontend:
+
+```powershell
+cd RiceDisease\frontend
+npm install
+npm run dev
+```
 
 ## Knowledge Base Crawler
 

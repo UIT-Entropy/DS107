@@ -1,0 +1,5 @@
+fastapi
+uvicorn[standard]
+python-multipart
+-r ../DS107_CVModule-main/requirements.txt
+-r ../../advisor/requirements.txt

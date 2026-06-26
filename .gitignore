@@ -5,3 +5,13 @@ __pycache__/
 .venv/
 venv/
 *.pyc
+node_modules/
+dist/
+build/
+RiceDisease/backend/uploads/
+RiceDisease/**/cache/
+RiceDisease/frontend/node_modules/
+RiceDisease/frontend/dist/
+RiceDisease/DS107-main/
+RiceDisease/DS107_CVModule-main/ds107_payload.json
+RiceDisease/DS107_CVModule-main/classification_results.json
