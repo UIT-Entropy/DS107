@@ -112,7 +112,14 @@ may be incomplete for pests with limited online documentation.
 The knowledge base therefore serves as supporting context for
 advisory generation, not as a replacement for expert field diagnosis.
 
-\subsection{Output Representation}
+\section{Methodology}
+\label{sec:methodology}
+
+\subsection{Visual Detection Module}
+
+The visual component is formulated as an object detection task. Given an input rice-field image, a YOLO-family detector predicts pest bounding boxes, class labels, and confidence scores. The detector is used not only to localize pests in the image but also to provide the pest-class prior required by the advisory module. Among the evaluated variants, YOLO11s is selected for the deployed pipeline because it provides the strongest image-level recognition balance while maintaining competitive localization performance.
+
+\subsection{Detection Output Representation}
 
 The computer vision module returns a structured output instead of a single label. The output contains the predicted pest class, Vietnamese display name, confidence score, detection status, bounding-box coordinates, and an annotated image. It also includes a compact downstream payload containing the predicted class identifier, confidence score, image reference, and confidence notes.
 
