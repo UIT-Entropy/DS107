@@ -1,107 +1,159 @@
-# DS107
+# DS107 RAG Rice Pest Advisor
 
-RAG advisor cho sâu hại lúa.
+## 1. Cài Đặt
 
-Flow chính:
-
-```text
-YOLO class_id -> advisor session -> Gemini RAG answer
-```
-
-Path được tự dò từ cấu trúc repo, không cần sửa hard-code path sau khi clone.
-
-## 1. Clone Và Cài Đặt
+Từ thư mục project:
 
 ```powershell
-git clone https://github.com/UIT-Entropy/DS107.git
-cd DS107
+cd "C:\Users\nguye\OneDrive\Desktop\DS107_RAG"
 python -m pip install -r advisor\requirements.txt
 ```
 
-Nếu muốn chạy lại crawler:
+Nếu chạy trên Linux/Vast:
 
-```powershell
-python -m pip install -r rice_pest_crawler\requirements.txt
+```bash
+cd /path/to/DS107_RAG
+python -m pip install -r advisor/requirements.txt
 ```
 
 ## 2. Điền Gemini API Key
 
-Chỉ điền key ở đúng file này:
+Chỉ điền API key ở đúng một file:
 
 ```text
 advisor/api_key.py
 ```
 
+Mở file đó và sửa:
+
 ```python
-GEMINI_API_KEY = "your_api_key_here"
+GEMINI_API_KEY = "your_gemini_api_key_here"
 ```
 
-Kiểm tra path, key, data:
+Kiểm tra project đã nhận key và đúng path chưa:
 
 ```powershell
 python advisor\gemini_rag.py doctor
 ```
 
+Kỳ vọng thấy:
+
+```text
+API key loaded: yes
+Chunks exists: yes
+Prompt exists: yes
+Model profile: free
+```
+
 ## 3. Build Embedding Index
 
-Index không commit lên GitHub. Sau khi pull code mới, build lại:
+Index là phần nhúng sẵn toàn bộ chunks. Nếu mới pull code về thì cần build một lần.
+
+Test nhanh 10 chunks trước:
+
+```powershell
+python advisor\gemini_rag.py build-index --limit 10
+```
+
+Build toàn bộ:
 
 ```powershell
 python advisor\gemini_rag.py build-index
+```
+
+Free tier có thể bị rate limit, tăng delay nếu cần:
+
+```powershell
+python advisor\gemini_rag.py build-index --delay 2
+```
+
+Kiểm tra đã đủ chưa:
+
+```powershell
 python advisor\gemini_rag.py index-info
 ```
 
-Nguồn chunk mặc định:
+## 4. Nhận Kết Quả YOLO Và Mở Session
 
-```text
-rice_pest_crawler\data\rag\all_chunks.jsonl
-```
+YOLO chạy ở bước trước, output tối thiểu cần có:
 
-Index sinh ra tại:
+- tên bệnh/sâu hoặc class id
+- confidence nếu có
+- đường dẫn ảnh nếu có
 
-```text
-advisor\data\gemini_embeddings.jsonl
-```
-
-## 4. Tạo Session Từ YOLO
-
-YOLO chỉ cần trả `class_id`.
+Ví dụ YOLO phát hiện đạo ôn lá:
 
 ```powershell
-python advisor\gemini_rag.py sessions start ruong-a --class-id brown_plant_hopper
+python advisor\gemini_rag.py sessions start ruong-a ^
+  --disease "đạo ôn lá" ^
+  --class-id "rice_blast" ^
+  --confidence 0.91 ^
+  --image "runs/detect/predict/field_001.jpg" ^
+  --crop-stage "làm đòng" ^
+  --location "An Giang" ^
+  --notes "Trời âm u, ruộng bón đạm hơi nhiều"
 ```
 
-Nếu có confidence:
+Trên Linux/Vast dùng dấu `\`:
+
+```bash
+python advisor/gemini_rag.py sessions start ruong-a \
+  --disease "đạo ôn lá" \
+  --class-id "rice_blast" \
+  --confidence 0.91 \
+  --image "runs/detect/predict/field_001.jpg" \
+  --crop-stage "làm đòng" \
+  --location "An Giang" \
+  --notes "Trời âm u, ruộng bón đạm hơi nhiều"
+```
+
+## 5. Hỏi Tư Vấn Theo Session
+
+Dùng cùng `--session` để advisor nhớ bệnh YOLO phát hiện và lịch sử hội thoại:
 
 ```powershell
-python advisor\gemini_rag.py sessions start ruong-a --class-id brown_plant_hopper --confidence 0.91
+python advisor\gemini_rag.py ask "Hôm nay tôi nên ưu tiên xử lý gì?" --session ruong-a --show-sources
 ```
 
-Mapping class nằm ở:
-
-```text
-advisor\config.py -> YOLO_CLASS_LABELS
-```
-
-## 5. Hỏi Advisor
+Hỏi tiếp:
 
 ```powershell
-python advisor\gemini_rag.py ask "Tôi nên xử lý thế nào?" --session ruong-a
+python advisor\gemini_rag.py ask "Nếu bệnh mới khoảng 5% lá thì có nên phun chưa?" --session ruong-a --show-sources
 ```
 
-Xem nguồn RAG:
+## 6. Các Chế Độ CLI
+
+Kiểm tra cấu hình:
 
 ```powershell
-python advisor\gemini_rag.py ask "Tôi nên xử lý thế nào?" --session ruong-a --show-sources
+python advisor\gemini_rag.py doctor
 ```
 
-Checklist ngắn:
+Build embedding index:
 
 ```powershell
-python advisor\gemini_rag.py ask "Nói ngắn gọn checklist việc cần làm sáng mai ngoài ruộng." --session ruong-a
+python advisor\gemini_rag.py build-index
 ```
 
-## 6. Quản Lý Session
+Retrieve/rerank context mà chưa gọi Gemini:
+
+```powershell
+python advisor\gemini_rag.py retrieve "Cách xử lý đạo ôn lá?"
+```
+
+Hỏi advisor:
+
+```powershell
+python advisor\gemini_rag.py ask "Cách xử lý đạo ôn lá?" --show-sources
+```
+
+Xem index:
+
+```powershell
+python advisor\gemini_rag.py index-info
+```
+
+Quản lý session:
 
 ```powershell
 python advisor\gemini_rag.py sessions list
@@ -110,23 +162,61 @@ python advisor\gemini_rag.py sessions delete ruong-a
 python advisor\gemini_rag.py sessions clear
 ```
 
-## 7. Crawler RAG Data
+## 7. Model Profile
 
-Crawler tạo dữ liệu nguồn cho advisor:
+Mặc định dùng profile tiết kiệm cho free tier trong `advisor/config.py`:
 
-```powershell
-python rice_pest_crawler\scripts\run_discovery.py --all
-python rice_pest_crawler\scripts\run_crawl.py --all
-python rice_pest_crawler\scripts\run_extract.py --all
-python rice_pest_crawler\scripts\build_chunks.py
-python rice_pest_crawler\scripts\run_local_context.py
-python rice_pest_crawler\scripts\build_all_chunks.py
-python rice_pest_crawler\scripts\audit_sources.py
+```python
+MODEL_PROFILE = "free"
 ```
 
-## 8. Test
+Các profile:
+
+```text
+free     -> gemini-embedding-001 + gemini-2.5-flash-lite
+balanced -> gemini-embedding-2   + gemini-2.5-flash
+quality  -> gemini-embedding-2   + gemini-3.5-flash
+```
+
+Nếu xài hàng free thì giữ `free`.
+
+## 8. Quy Ước Path Và Module
+
+Path/config tập trung ở:
+
+```text
+advisor/config.py
+```
+
+API key chỉ ở:
+
+```text
+advisor/api_key.py
+```
+
+Cấu trúc module:
+
+```text
+advisor/
+  api_key.py      # nơi duy nhất chứa Gemini API key
+  config.py       # root/path/model/profile
+  cli.py          # CLI commands
+  gemini_rag.py   # entrypoint
+  core/           # orchestration, session
+  embedding/      # embedding, vector index
+  reranker/       # rerank theo domain nông nghiệp
+  prompts/        # prompt chuyên gia
+  gemini/         # Gemini client
+  data/           # index/session sinh ra khi chạy
+```
+
+Không tự hardcode path trong module nghiệp vụ. Nếu cần đổi path, đổi qua `AdvisorConfig` hoặc CLI args. 
+
+## 9. Test
+
+Test offline không gọi Gemini:
 
 ```powershell
 python -m pytest advisor\tests
-python -m pytest rice_pest_crawler\tests
 ```
+
