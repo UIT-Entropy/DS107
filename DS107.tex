@@ -34,7 +34,7 @@ University of Information Technology, VNU-HCM (VNU-UIT)
 \begin{abstract}
 Rice pests can cause substantial yield losses, and farmers need not only timely pest recognition but also reliable guidance on symptoms, diagnosis, and management. This study develops an integrated rice pest detection and advisory support system intended to support Vietnamese farmers by combining a YOLO11s object detector with a retrieval-augmented generation (RAG) advisory module built from agricultural knowledge sources.
 The vision module detects 10 common rice pest classes from field images and passes the predicted pest class to the advisory pipeline as a retrieval prior. The RAG module then retrieves class- and intent-relevant knowledge chunks and generates Vietnamese advisory responses grounded in the collected sources.
-On a bounding-box annotated dataset of 3,156 images, YOLO11s achieves an F1-score of 0.8971 and mAP50 of 0.9125. On a 40-question in-domain advisory benchmark, retrieval with a simulated detector-provided class prior improves Class Hit@5 from 0.650 to 0.975 and MRR@5 from 0.478 to 0.736, while RAG improves semantic similarity from 0.490 to 0.540 over a No-RAG baseline.
+On a bounding-box annotated dataset of 3,156 images, YOLO11s achieves an F1-score of 0.8971 and mAP50 of 0.9125. On a 40-question in-domain advisory benchmark, retrieval with a simulated detector-provided class prior improves Class Hit@5 from 0.650 to 0.975, Section Hit@5 from 0.400 to 0.775, and MRR@5 from 0.478 to 0.736, while RAG improves semantic similarity from 0.490 to 0.540 over a No-RAG baseline.
 These results show that visual pest recognition can support not only detection but also source-grounded agricultural advisory generation.
 \end{abstract}
 
@@ -112,12 +112,33 @@ may be incomplete for pests with limited online documentation.
 The knowledge base therefore serves as supporting context for
 advisory generation, not as a replacement for expert field diagnosis.
 
+\subsection{Advisory Benchmark Dataset}
+\label{sec:advisory_benchmark}
+
+To evaluate the advisory component, we constructed a small in-domain
+benchmark consisting of 40 manually designed Vietnamese questions.
+The benchmark follows a balanced class--intent design: the 10 pest
+classes in the detection taxonomy are each paired with four advisory
+intents, namely symptoms, diagnosis, treatment, and prevention. These
+intents are mapped to canonical knowledge sections:
+\texttt{damage\_symptoms}, \texttt{field\_diagnosis},
+\texttt{management\_ipm}, and \texttt{warnings}. Each benchmark item
+therefore contains a question, target pest class, intent label, and
+expected knowledge section.
+
+Reference answers were manually prepared for all 40 questions using
+the collected agricultural sources and domain-oriented pest management
+knowledge. They were written as concise advisory responses rather
+than copied verbatim from retrieved chunks. The benchmark is intended
+for controlled in-domain analysis of retrieval and generation behavior;
+it is not a substitute for a large-scale farmer-facing user study.
+
 \section{Methodology}
 \label{sec:methodology}
 
 \subsection{Visual Detection Module}
 
-The visual component is formulated as an object detection task. Given an input rice-field image, a YOLO-family detector predicts pest bounding boxes, class labels, and confidence scores. The detector is used not only to localize pests in the image but also to provide the pest-class prior required by the advisory module. Among the evaluated variants, YOLO11s is selected for the deployed pipeline because it provides the strongest image-level recognition balance while maintaining competitive localization performance.
+The visual component is formulated as an object detection task. Given an input rice-field image, a YOLO-family detector predicts pest bounding boxes, class labels, and confidence scores. The detector is used not only to localize pests in the image but also to provide the pest-class prior required by the advisory module. The final deployed detector is selected from the evaluated YOLO variants based on the recognition and localization results reported in Section~\ref{sec:results}.
 
 \subsection{Detection Output Representation}
 
@@ -197,13 +218,12 @@ mAP50 uses an IoU threshold of 0.50; mAP50-95 averages over thresholds from 0.50
 
 \subsection{Advisory Evaluation Setup}
 
-To evaluate the advisory component, we constructed a small in-domain benchmark consisting of 40 manually designed questions. The questions cover the 10 rice pest classes in the detection taxonomy and four advisory intents: symptoms, diagnosis, treatment, and prevention, yielding one question for each class--intent pair. These intents are mapped to canonical knowledge sections: \texttt{damage\_symptoms}, \texttt{field\_diagnosis}, \texttt{management\_ipm}, and \texttt{warnings}. Each question is associated with a target pest class and a target knowledge section, allowing evaluation at both the class level and the section level.
+Using the benchmark described in Section~\ref{sec:advisory_benchmark}, we evaluated the advisory module from two perspectives. For retrieval, we report Class Hit@5, Section Hit@5, and MRR@5 over the top-5 ranked chunks. Class Hit@5 measures whether the correct pest class appears in the top-5 retrieved chunks, Section Hit@5 measures whether the expected knowledge section is retrieved, and MRR@5 measures whether relevant chunks are ranked early. Because the advisory benchmark contains text questions rather than paired field images, the retrieval ablation simulates the YOLO prior by injecting the benchmark target class into the query/session context. This setting estimates the benefit of a correct detector-provided class prior; end-to-end evaluation with noisy detector outputs is left for future work.
 
-We evaluated the advisory module from two perspectives. For retrieval, we report Class Hit@5, Section Hit@5, and MRR@5 over the top-5 ranked chunks. Class Hit@5 measures whether the correct pest class appears in the top-5 retrieved chunks, Section Hit@5 measures whether the expected knowledge section is retrieved, and MRR@5 measures whether relevant chunks are ranked early. Because the advisory benchmark contains text questions rather than paired field images, the retrieval ablation simulates the YOLO prior by injecting the benchmark target class into the query/session context. This setting estimates the benefit of a correct detector-provided class prior; end-to-end evaluation with noisy detector outputs is left for future work.
-
-For generation, expert reference answers were prepared for all questions, and system outputs were compared using ROUGE-L~\citep{lin2004rouge}, BERTScore~\citep{zhang2020bertscore}, and semantic similarity. Reference answers were manually written from domain knowledge and source documents, but were not copied verbatim from retrieved chunks. The No-RAG baseline uses the same language model with the question and target class identifier but without retrieved context, while the RAG setting uses the advisory pipeline to retrieve chunks for each question and supplies the retrieved context to the prompt. Semantic similarity was computed by encoding generated and reference answers with \texttt{paraphrase-multilingual-MiniLM-L12-v2} and measuring cosine similarity.
+For generation, system outputs were compared against the manually prepared reference answers using ROUGE-L~\citep{lin2004rouge}, BERTScore~\citep{zhang2020bertscore}, and semantic similarity. The No-RAG baseline uses the same language model with the question and target class identifier but without retrieved context, while the RAG setting uses the advisory pipeline to retrieve chunks for each question and supplies the retrieved context to the prompt. This makes the comparison conservative for RAG, since the No-RAG baseline is still given the target pest class. Semantic similarity was computed by encoding generated and reference answers with \texttt{paraphrase-multilingual-MiniLM-L12-v2} and measuring cosine similarity.
 
 \section{Results and Discussion}
+\label{sec:results}
 
 \subsection{Evaluation Results}
 
@@ -255,7 +275,7 @@ Without YOLO & 0.650 & 0.400 & 0.478 \\
 }
 \end{table}
 
-Table~\ref{tab:advisory_generation} compares the baseline language model without retrieval augmentation against the proposed RAG-based advisory module. The RAG configuration improves ROUGE-L from 0.258 to 0.277, BERTScore from 0.685 to 0.690, and semantic similarity from 0.490 to 0.540. These gains are modest, especially for lexical overlap and BERTScore, but the semantic similarity improvement suggests that retrieved agricultural knowledge may help the model generate answers that are more aligned with expert references.
+Table~\ref{tab:advisory_generation} compares the baseline language model without retrieval augmentation against the proposed RAG-based advisory module. The RAG configuration improves ROUGE-L from 0.258 to 0.277, BERTScore from 0.685 to 0.690, and semantic similarity from 0.490 to 0.540. These gains are modest, especially for lexical overlap and BERTScore, but the semantic similarity improvement suggests that retrieved agricultural knowledge may help the model generate answers that are more aligned with the reference answers.
 
 \begin{table}[h]
 \centering
@@ -373,7 +393,7 @@ for confusable pairs.
 
 \section{Conclusion}
 
-This study has developed a rice pest detection and advisory support system intended to support Vietnamese farmers. By employing the YOLO11s model, the system achieves strong performance in pest recognition, with an F1-score of 0.8971 and mAP50 of 0.9125 on the test set. The integration of a detection-based computer vision module with a RAG-based advisory component, supported by a Vietnamese agricultural knowledge base, enables not only accurate pest identification but also the provision of relevant advisory information on symptoms, diagnosis, and management practices. Advisory evaluation further shows that using a correct class prior as retrieval context improves Class Hit@5 from 0.650 to 0.975, while retrieval augmentation increases semantic similarity from 0.490 to 0.540 over the No-RAG baseline.
+This study has developed a rice pest detection and advisory support system intended to support Vietnamese farmers. By employing the YOLO11s model, the system achieves strong performance in pest recognition, with an F1-score of 0.8971 and mAP50 of 0.9125 on the test set. The integration of a detection-based computer vision module with a RAG-based advisory component, supported by a Vietnamese agricultural knowledge base, enables not only accurate pest identification but also the provision of relevant advisory information on symptoms, diagnosis, and management practices. Advisory evaluation further shows that using a correct class prior as retrieval context improves Class Hit@5 from 0.650 to 0.975 and Section Hit@5 from 0.400 to 0.775, while retrieval augmentation increases semantic similarity from 0.490 to 0.540 over the No-RAG baseline.
 
 Despite the promising results, the system has certain limitations. Morphological confusion persists among visually similar pest classes, and detection performance tends to decrease for small or occluded objects. Future work will focus on improving model performance through higher input resolution, hard-negative mining, and targeted data augmentation for confusable pest categories. It will also expand the advisory benchmark with more farmer-like questions, expert human evaluation, and broader coverage of rice diseases and other major crops in Vietnam.
 
