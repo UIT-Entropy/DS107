@@ -1,0 +1,566 @@
+﻿\documentclass[11pt]{article}
+
+\usepackage{acl}
+
+\usepackage{times}
+\usepackage{latexsym}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{microtype}
+\usepackage{inconsolata}
+\usepackage{graphicx}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{url}
+
+\title{Developing a Rice Pest Detection and Advisory Support System for Vietnamese Farmers\thanks{All authors contributed equally as first authors.}}
+
+
+\author{
+\begin{tabular}{cc}
+Nguyen Bao Quan & Bui Thi Thanh Tuyen \\
+\texttt{24521436@gm.uit.edu.vn} & \texttt{24521956@gm.uit.edu.vn} \\[0.8ex]
+Nguyen Dinh Tuan Phuc & Tran Minh Phat \\
+\texttt{24521384@gm.uit.edu.vn} & \texttt{24521317@gm.uit.edu.vn}
+\end{tabular} \\
+Faculty of Information Science and Engineering \\
+University of Information Technology, VNU-HCM (VNU-UIT)
+}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Rice pests can cause substantial yield losses, and farmers need not only timely pest recognition but also reliable guidance on symptoms, diagnosis, and management. This study develops an integrated rice pest detection and advisory support system intended to support Vietnamese farmers by combining a YOLO11s object detector with a retrieval-augmented generation (RAG) advisory module built from agricultural knowledge sources.
+The vision module detects 10 common rice pest classes from field images and passes the predicted pest class to the advisory pipeline as a retrieval prior. The RAG module then retrieves class- and intent-relevant knowledge chunks and generates Vietnamese advisory responses grounded in the collected sources.
+On a bounding-box annotated dataset of 3,156 images, YOLO11s achieves an F1-score of 0.8971 and mAP50 of 0.9125. On a 40-question in-domain advisory benchmark, retrieval with a simulated detector-provided class prior improves Class Hit@5 from 0.650 to 0.975 and MRR@5 from 0.478 to 0.736, while RAG improves semantic similarity from 0.490 to 0.540 over a No-RAG baseline.
+These results show that visual pest recognition can support not only detection but also source-grounded agricultural advisory generation.
+\end{abstract}
+
+\section{Introduction}
+
+Rice is a vital crop in Vietnam, significantly contributing to national agricultural production \citep{fao_sri_vietnam}. However, rice cultivation is frequently threatened by various pest species that can cause substantial yield losses and quality reduction \citep{oerke2006crop}. Timely and accurate pest identification is therefore essential for effective field monitoring and management.
+
+Traditional pest identification relies on manual visual inspection by farmers or experts. This approach is often challenging under field conditions due to variations in pest appearance across growth stages, lighting conditions, image quality, and complex backgrounds. Additionally, several pest categories share similar visual features, leading to frequent confusion \citep{quach2024rice}. These limitations have driven the development of image-based deep learning systems for agricultural pest recognition \citep{shoaib2025deep}.
+
+This study proposes a rice pest detection and advisory support system designed with Vietnamese rice-farming context in mind. The system integrates a YOLO-based detection module for identifying pest categories from rice images with a retrieval-augmented advisory component that provides relevant information in Vietnamese. The advisory module serves as supplementary support and does not replace expert field assessment.
+
+The main contributions of this work include: (1) developing an image-based pipeline for rice pest recognition, (2) evaluating the model on a bounding-box annotated dataset \citep{quach2024rice}, (3) analyzing recognition errors across pest classes, and (4) evaluating a deployment pipeline that connects visual detection with retrieval-augmented advisory support for practical farmer use.
+
+\section{Related Work}
+
+The automatic identification of rice pests using deep learning has
+attracted increasing research attention, driven by the need for timely
+crop protection and precision agriculture. Existing approaches can be
+broadly grouped into three categories: detection-based methods,
+classification-based methods, and deployment-oriented approaches.
+
+Among detection-based approaches, \cite{yuan2026hda} proposed
+HDA-YOLO, a lightweight model built upon YOLOv8n with hierarchical
+attention mechanisms, achieving a mAP@50 improvement of 2.4\% over
+the baseline with only 3.93M parameters. \citet{li2025yolomslp}
+developed YOLO-MSLP based on YOLOv11n, integrating adaptive pooling
+BiFPN and multi-scale triplet attention, reaching 94.5\% average
+precision with a model size of 4.5~MB. These works demonstrate the
+strong potential of YOLO-family architectures for rice pest
+localization while balancing accuracy and computational efficiency.
+
+In classification-based identification, \citet{darmawan2024dml}
+proposed a deep metric learning framework with knowledge distillation
+for paddy pest recognition, achieving 97.3\% validation accuracy at
+only 0.12~GFLOPs and successfully deploying the student model on a
+Raspberry~Pi~4B for offline edge inference. For edge deployment,
+\citet{akhtar2025edge} systematically investigated quantization
+techniques---including PTQ, QAT, and DRQ---on Mobile-ViT and
+EfficientNet architectures, reducing model size from 33~MB to 9.6~MB
+while maintaining 77.8\% accuracy, highlighting trade-offs between
+accuracy, model size, and inference speed in practical agricultural
+settings.
+
+Alongside visual recognition, recent studies have explored retrieval-augmented generation (RAG) for agricultural advisory systems. \citet{liu2026tarag} proposed TARAG, a time-aware RAG framework for precision pest and disease management with a large multi-crop knowledge base. \citet{wu2026cropgraphrag} introduced Crop GraphRAG, combining knowledge graphs with RAG to support pest and disease Q\&A across rice, wheat, and maize. Similarly, \citet{zhang2026demeter} developed Chat Demeter, integrating plant disease detection with a RAG backend for diagnosis and treatment recommendations.
+
+While these works demonstrate the potential of RAG in agriculture, they differ from our approach in scope and design. Most construct broad, multi-crop knowledge bases and perform retrieval over the entire corpus. In contrast, our system tightly integrates YOLO11s detection with a class-aware RAG module: the predicted \texttt{class\_id} is used to scope retrieval specifically to the corresponding pest profile. Our knowledge base is assembled from agricultural extension and pest-management sources, with the accepted crawl consisting mainly of Vietnamese extension documents, TNAU, UC IPM, and LSU AgCenter pages, providing advisory content relevant to rice-farming conditions.
+
+\section{Dataset}
+\label{sec:dataset}
+
+\subsection{Rice Pest Dataset}
+
+The rice pest dataset employed in this study originates from the high-quality collection presented by \citet{quach2024rice}. This dataset was meticulously curated from various public sources, including ImageNet, Microsoft COCO, and a filtered portion of the IP102 dataset. All images underwent rigorous cleaning, deduplication, standardization to $312 \times 312$ pixels, and expert validation by agricultural specialists from the Cuu Long Delta Rice Research Institute, Vietnam. It comprises 3,156 JPEG images distributed across 10 classes of common rice pests: Asiatic rice borer, Brown planthopper, Paddy stem maggot, Rice gall midge, Rice leaf roller, Rice leaf caterpillar, Rice leafhopper, Rice water weevil, Small brown planthopper, and Yellow rice borer.
+
+For this research, we utilized a bounding-box annotated version of the dataset available on Roboflow \citep{roboflow_ricepest}. The dataset was divided into training (2,210 images), validation (631 images), and test (315 images) sets.
+
+\subsection{Knowledge Base Dataset for Advisory Support}
+A textual knowledge base was developed to support the advisory module by providing relevant contextual information for follow-up questions after pest recognition. This dataset was not used for training the YOLO model.
+Candidate documents were collected from agricultural sources categorized into two tiers. Tier-1 candidate sources prioritized for pest management content included the International Rice Research Institute (IRRI) at \url{knowledgebank.irri.org}, the Food and Agriculture Organization of the United Nations (FAO) at \url{fao.org}, and Plantwise/CABI at \url{plantwiseplusknowledgebank.org}. Tier-2 candidate sources included the CABI Digital Library, BRRI, UC IPM, LSU AgCenter, Tamil Nadu Agricultural University (TNAU) at \url{agritech.tnau.ac.in}, NIPHM, and the Vietnamese National Agricultural Extension Center at \url{khuyennongvn.gov.vn}.
+After crawling, filtering, and extraction, the final accepted knowledge base contained 62 document rows from 52 unique URLs. Most accepted documents came from \url{khuyennongvn.gov.vn} and \url{agritech.tnau.ac.in}, with supplementary targeted pages from UC IPM and LSU AgCenter for specific pest classes such as the rice water weevil. Some higher-priority candidate URLs were not retained because of access errors or relevance filtering.
+
+As illustrated in Figure~\ref{fig:crawler}, the data collection pipeline consists of four main stages: (1)~URL discovery and relevance scoring based on domain tier and pest-related keywords; (2)~HTML and PDF downloading with per-domain rate limiting; (3)~extraction of structured pest profiles covering symptoms, life cycle, integrated pest management (IPM) strategies, and chemical control options; and (4)~chunking into retrieval-augmented generation (RAG) segments stored in \texttt{all\_chunks.jsonl} for embedding and retrieval. Additional local context chunks from Vietnamese agricultural sources were incorporated to provide background information on field monitoring, crop management, and pesticide safety.
+
+\begin{figure}[h]
+  \includegraphics[width=\columnwidth]{crawler.png}
+  \caption{Knowledge base construction pipeline for the advisory
+           module.}
+  \label{fig:crawler}
+\end{figure}
+
+The knowledge base covers all 10 pest classes defined in the
+detection taxonomy. However, since profile extraction is rule-based
+and source discovery depends on pre-configured URLs, some sections
+may be incomplete for pests with limited online documentation.
+The knowledge base therefore serves as supporting context for
+advisory generation, not as a replacement for expert field diagnosis.
+
+\subsection{Output Representation}
+
+The computer vision module returns a structured output instead of a single label. The output contains the predicted pest class, Vietnamese display name, confidence score, detection status, bounding-box coordinates, and an annotated image. It also includes a compact downstream payload containing the predicted class identifier, confidence score, image reference, and confidence notes.
+
+This structured output serves two purposes. First, it allows the frontend to display the detected pest region and confidence information to the user. Second, it provides the advisory module with a compact representation of the recognition result without requiring the advisory module to process the image directly.
+
+\subsection{System Integration and Advisory Workflow}
+
+Figure~\ref{fig:pipeline} illustrates the integrated workflow of the proposed rice pest recognition and advisory support system. The system connects YOLO-based visual recognition with a retrieval-augmented advisory module, so that the output is not only a pest label but also a source-grounded explanation and management support.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=\columnwidth]{System_Pipeline.png}
+\caption{Integrated workflow of the rice pest recognition and advisory support system.}
+\label{fig:pipeline}
+\end{figure}
+
+Given an uploaded field image, the trained detector returns the predicted class identifier, confidence score, bounding-box evidence, and image references. The predicted class identifier is then used to initialize an advisor session, which stores the detected pest class together with optional context such as crop stage, location, user notes, and previous interaction history.
+
+During advisory interaction, the farmer's question is combined with the session context to form an expanded query. Following the retrieval-augmented generation paradigm~\cite{lewis2020rag}, the system retrieves candidate chunks from the Vietnamese agricultural knowledge base. These chunks are then reranked according to three signals: the detected pest class, the intent of the question, and the required section type, such as symptoms, field diagnosis, management, or safety warnings. This class-aware reranking reduces irrelevant retrieval when visually similar pests share overlapping symptoms or control practices.
+
+The advisory index is built from 278 chunks, including 134 pest-specific chunks and 144 Vietnamese local-context chunks. Pest profiles are split by structured sections such as \texttt{identity}, \texttt{damage\_symptoms}, \texttt{field\_diagnosis}, \texttt{management\_ipm}, \texttt{chemical\_control}, and \texttt{warnings}; long section texts are split with a target length of 750 tokens, a maximum length of 900 tokens, and 100-token overlap. Each chunk stores metadata including \texttt{class\_id}, section label, source organization, source URL, source relation, and language. Embeddings are generated with Google's Gemini embedding model and stored in a JSONL vector index. Retrieval first selects 24 candidates by cosine similarity, then applies a lightweight domain reranker combining embedding score, lexical overlap, source quality, section-intent matching, and a source-diversity penalty. The generation module uses Gemini Flash-Lite with temperature 0.2 and a maximum output length of 1200 tokens.
+
+The top-ranked chunks are combined with the user question and session context to construct the final generation prompt. The response is written in Vietnamese and may include source markers such as \texttt{[S1]} and \texttt{[S2]} when retrieved documents are used. The advisory module is therefore treated as source-grounded decision support rather than an autonomous diagnosis system. It extends the visual recognition result with actionable information, but it does not replace expert field assessment.
+
+
+
+\section{Experimental Settings}
+
+\subsection{Dataset Preparation}
+
+The experiments were conducted on the bounding-box annotated rice pest dataset described in Section~\ref{sec:dataset}. The dataset was divided into training, validation, and test subsets. Data augmentation was applied exclusively to the training set, while the validation and test sets were kept unchanged to ensure a fair evaluation of model generalization.
+
+To enhance model robustness, mitigate overfitting, and improve generalization, the following augmentation operations were applied: crop (0\% minimum zoom, 20\% maximum zoom); shear ($\pm10^\circ$ horizontal and vertical); saturation ($-25\%$ to $+25\%$); brightness ($-15\%$ to $+15\%$); exposure ($-10\%$ to $+10\%$); blur (up to 2.5 pixels); cutout (3 boxes, 10\% size each); and mosaic. This augmentation process expanded the training set from 2,210 to 6,630 images.
+
+\subsection{Model Variants}
+
+The experiments focus on detection-based models from the YOLO
+family \citep{redmon2016yolo}, selected for their single-stage
+inference efficiency and suitability for deployment. We evaluated
+three generations: YOLOv8 \citep{ultralytics_yolov8} as a stable,
+widely adopted baseline; YOLO11 \citep{ultralytics_yolo11} as a
+newer generation with improved accuracy and reduced parameter count;
+and YOLO26 \citep{ultralytics_yolo26} as an edge-oriented
+architecture supporting NMS-free inference, included to assess
+performance on small-object detection. Larger variants (m/l/x) were
+excluded as the primary goal is deployment feasibility, where
+inference speed and model size matter alongside accuracy. For each
+generation, both the nano (\texttt{n}) and small (\texttt{s})
+variants were evaluated, representing lightweight and
+higher-capacity configurations respectively.
+
+\subsection{Training Environment and Configuration}
+
+All experiments were conducted in the Kaggle Notebook environment using an NVIDIA Tesla T4 GPU. The maximum number of training epochs was set to 120, with early stopping (patience = 15). Detection-based variants used either $320 \times 320$ or $416 \times 416$ input resolution. For each experiment, the best checkpoint selected during validation was used for final evaluation on the test set.
+
+\subsection{Evaluation Metrics}
+
+The evaluation was conducted at two levels: image-level classification and object-level detection. For image-level classification, we use precision, recall, and F1-score:
+\[
+\text{Precision} = \frac{TP}{TP + FP}, \quad \text{Recall} = \frac{TP}{TP + FN},
+\]
+\[
+\text{F1-score} = 2 \cdot \frac{\text{Precision} \cdot \text{Recall}}{\text{Precision} + \text{Recall}}.
+\]
+
+For object detection, a prediction is matched to a ground-truth box via Intersection over Union (IoU):
+\[
+\text{IoU}(B_p, B_g) = \frac{|B_p \cap B_g|}{|B_p \cup B_g|}.
+\]
+A detection is correct when its class is correct and $\text{IoU} \geq$ threshold. The mean Average Precision (mAP) is:
+\[
+mAP = \frac{1}{K}\sum_{k=1}^{K} AP_k, \quad AP_k = \int_{0}^{1} p(r)\,dr.
+\]
+mAP50 uses an IoU threshold of 0.50; mAP50-95 averages over thresholds from 0.50 to 0.95.
+
+\subsection{Advisory Evaluation Setup}
+
+To evaluate the advisory component, we constructed a small in-domain benchmark consisting of 40 manually designed questions. The questions cover the 10 rice pest classes in the detection taxonomy and four advisory intents: symptoms, diagnosis, treatment, and prevention, yielding one question for each class--intent pair. Each question is associated with a target pest class and a target knowledge section, allowing evaluation at both the class level and the section level.
+
+We evaluated the advisory module from two perspectives. For retrieval, we report Class Hit@5, Section Hit@5, and MRR@5 over the top-5 ranked chunks. Class Hit@5 measures whether the correct pest class appears in the top-5 retrieved chunks, Section Hit@5 measures whether the expected knowledge section is retrieved, and MRR@5 measures whether relevant chunks are ranked early. Because the advisory benchmark contains text questions rather than paired field images, the retrieval ablation simulates the YOLO prior by injecting the benchmark target class into the query/session context. This setting estimates the benefit of a correct detector-provided class prior; end-to-end evaluation with noisy detector outputs is left for future work.
+
+For generation, expert reference answers were prepared for all questions, and system outputs were compared using ROUGE-L~\citep{lin2004rouge}, BERTScore~\citep{zhang2020bertscore}, and semantic similarity. Reference answers were manually written from domain knowledge and source documents, but were not copied verbatim from retrieved chunks. The No-RAG baseline uses the same language model with the same question and class metadata but without retrieved context, while the RAG setting supplies the retrieved advisory chunks to the prompt. Semantic similarity was computed by encoding generated and reference answers with a multilingual Sentence-BERT model~\citep{reimers2019sentencebert} and measuring cosine similarity.
+
+\section{Results and Discussion}
+
+\subsection{Evaluation Results}
+
+The experiments were conducted on the bounding-box annotated version of the Rice Pest Dataset introduced by Quach et al.~\cite{quach2024rice}. Since the original publication is a data article and does not provide an official benchmark split or baseline model results, this study reports the performance of the evaluated models under our own train/validation/test setting. Because the final system uses a detection-based recognition pipeline, image-level recognition metrics are computed by selecting the highest-confidence detection in each image as the predicted pest label, while mAP50 and mAP50-95 are used to evaluate bounding-box localization quality.
+
+\begin{table}[h]
+\centering
+\caption{Performance of the evaluated YOLO models on the bounding-box annotated Rice Pest Dataset. Bold values indicate the best result among our evaluated models.}
+\label{tab:test}
+\scriptsize
+\resizebox{\columnwidth}{!}{%
+\begin{tabular}{lccccc}
+\hline
+\textbf{Method} & \textbf{Precision} & \textbf{Recall} & \textbf{F1-score} & \textbf{mAP50} & \textbf{mAP50-95} \tabularnewline
+\hline
+YOLOv8n-320  & 0.8700 & 0.8300 & 0.8495 & 0.8900 & 0.7570 \tabularnewline
+YOLOv8n-416  & 0.8870 & 0.8230 & 0.8538 & 0.8940 & 0.7640 \tabularnewline
+YOLOv8s-320  & 0.9104 & 0.8389 & 0.8732 & 0.9051 & 0.7863 \tabularnewline
+\textbf{YOLOv8s-416}  & 0.8821 & 0.8623 & 0.8721 & \textbf{0.9171} & \textbf{0.8041} \tabularnewline
+YOLOv26n-416 & 0.8627 & 0.8534 & 0.8580 & 0.9004 & 0.7789 \tabularnewline
+YOLOv26s-416 & 0.8966 & 0.8430 & 0.8691 & 0.9058 & 0.7841 \tabularnewline
+YOLO11n-416  & 0.8643 & 0.8653 & 0.8648 & 0.8968 & 0.7830 \tabularnewline
+\textbf{YOLO11s-416}  & \textbf{0.9108} & \textbf{0.8838} & \textbf{0.8971} & 0.9125 & 0.8014 \tabularnewline
+\hline
+\end{tabular}%
+}
+\end{table}
+
+To position our results with respect to prior work, we compare them contextually rather than as a strict leaderboard. The teacher--student classification study by Quach et al.~\cite{quach2026xai} is the closest image-level reference on a rice pest dataset with over 3,000 images and 10 classes, reporting an F1-score of 82.13\%. In contrast, HDA-YOLO~\cite{yuan2026hda} evaluates detection on RicePest\_12, a modified dataset constructed from Pest\_V2 and other sources, while Li et al.~\cite{li2025yolomslp} report 94.5\% average precision on a different rice pest detection dataset. Therefore, these studies are useful for contextual comparison, but they are not treated as directly comparable benchmarks due to differences in dataset construction, class definitions, annotation formats, and evaluation protocols.
+
+\subsection{Advisory Module Evaluation}
+
+Table~\ref{tab:advisory_retrieval} reports the retrieval ablation results. Without visual guidance, the retriever may return chunks from related but incorrect pest categories. When the simulated detector-provided class prior is incorporated into the retrieval process, Class Hit@5 increases from 0.650 to 0.975, and MRR@5 increases from 0.478 to 0.736. This indicates that visual recognition can act as an effective retrieval prior when the detected pest class is correct.
+
+\begin{table}[h]
+\centering
+\caption{Effect of visual pest recognition on retrieval performance.}
+\label{tab:advisory_retrieval}
+\scriptsize
+\resizebox{\columnwidth}{!}{%
+\begin{tabular}{lccc}
+\toprule
+\textbf{Configuration} & \textbf{Class Hit@5} & \textbf{Section Hit@5} & \textbf{MRR@5} \\
+\midrule
+Without YOLO & 0.650 & 0.400 & 0.478 \\
+\textbf{Full System} & \textbf{0.975} & \textbf{0.525} & \textbf{0.736} \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+
+Table~\ref{tab:advisory_generation} compares the baseline language model without retrieval augmentation against the proposed RAG-based advisory module. The RAG configuration improves ROUGE-L from 0.258 to 0.277, BERTScore from 0.685 to 0.690, and semantic similarity from 0.490 to 0.540. These gains are modest, especially for lexical overlap and BERTScore, but the semantic similarity improvement suggests that retrieved agricultural knowledge may help the model generate answers that are more aligned with expert references.
+
+\begin{table}[h]
+\centering
+\caption{Generation quality comparison between the No-RAG baseline and the retrieval-augmented advisory module.}
+\label{tab:advisory_generation}
+\scriptsize
+\resizebox{\columnwidth}{!}{%
+\begin{tabular}{lccc}
+\toprule
+\textbf{System} & \textbf{ROUGE-L} & \textbf{BERTScore} & \textbf{Semantic Sim.} \\
+\midrule
+No-RAG & 0.258 & 0.685 & 0.490 \\
+\textbf{RAG} & \textbf{0.277} & \textbf{0.690} & \textbf{0.540} \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+
+These results provide preliminary in-domain evidence for integrating detection and advisory generation. The detection model can provide a pest-class prior that improves retrieval relevance, while the RAG module converts the detected class into source-grounded advisory information. However, Section Hit@5 remains lower than Class Hit@5, indicating that retrieving the correct pest class does not always guarantee retrieval of the most appropriate advisory subsection. This likely occurs because short advisory questions often have ambiguous intent, several sections overlap semantically (e.g., symptoms and field diagnosis), and local-context chunks can compete with pest-specific chunks in the top ranks. Because the advisory benchmark is small, these results should not be interpreted as a conclusive evaluation of farmer-facing advisory quality; they motivate future work on stronger intent classification, fine-grained reranking, and larger expert-reviewed benchmarks.
+
+\subsection{Discussion}
+
+Table~\ref{tab:test} shows that all evaluated YOLO variants achieved strong performance on the rice pest recognition task, with F1-scores above 0.84 and mAP50 values close to or above 0.89. For YOLOv8n, increasing the image size from 320 to 416 slightly improved F1-score, mAP50, and mAP50-95. For YOLOv8s, the 416 setting achieved the best localization performance, with the highest mAP50 of 0.9171 and mAP50-95 of 0.8041.
+
+Among the evaluated models, YOLO11s achieved the best image-level recognition performance, with the highest Precision of 0.9108, Recall of 0.8838, and F1-score of 0.8971. Its localization results were also competitive, reaching 0.9125 mAP50 and 0.8014 mAP50-95. Compared with YOLOv8s-416, YOLO11s-416 was lower by only 0.0046 in mAP50 and 0.0027 in mAP50-95, while achieving better precision and recall.
+
+Overall, the results indicate a trade-off between localization quality and recognition balance. YOLOv8s-416 is the strongest configuration for bounding-box localization, whereas YOLO11s-416 provides the best overall recognition performance. Since the proposed advisory system depends primarily on a reliable pest label for retrieval while still requiring visual evidence through bounding boxes, YOLO11s is selected as the deployment-oriented model. These results should be interpreted as a reproducible evaluation under our experimental setting rather than a claim of state-of-the-art performance on an official benchmark.
+
+Beyond visual recognition alone, the detector also serves as a retrieval prior for the RAG module. By passing the predicted pest class to the advisory pipeline, the system narrows retrieval toward class-relevant chunks before generation. This design explains why improvements in detection reliability have downstream value for advisory quality, not only for image-level pest identification.
+
+
+\section{Error Analysis}
+
+Error analysis was conducted on the test set at $\text{conf} = 0.25$,
+chosen to prioritize recall, as missed pests cause greater economic
+damage than false alarms. Detections were matched to ground-truth
+annotations via greedy IoU matching ($\text{IoU} \geq 0.50$) and
+categorized as TP, FP, FN, or WRONG\_CLASS (correct localization,
+incorrect class; the GT instance is also counted as FN).
+
+\subsection{Per-Class Performance}
+
+Table~\ref{tab:perclass_conf} reports per-class metrics across 315
+test images (420 GT instances). Figure~\ref{fig:app_f1_fpfn}
+visualizes FP and FN counts alongside F1-score per class.
+
+\begin{table}[h]
+  \centering
+  \small
+  \resizebox{\columnwidth}{!}{%
+  \begin{tabular}{lcccccc}
+    \toprule
+    \textbf{Class} & \textbf{TP} & \textbf{FP} & \textbf{FN}
+                   & \textbf{Prec.} & \textbf{Rec.} & \textbf{F1} \\
+    \midrule
+    Asiatic rice borer      & 67 & 45 & 13 & 0.598 & 0.838 & 0.698 \\
+    Small brown planthopper & 31 & 15 &  9 & 0.674 & 0.775 & 0.721 \\
+    Brown planthopper       & 51 & 22 &  9 & 0.699 & 0.850 & 0.767 \\
+    Rice leaf caterpillar   & 13 &  2 &  3 & 0.867 & 0.812 & 0.839 \\
+    Rice leaf roller        & 83 & 20 &  8 & 0.806 & 0.912 & 0.856 \\
+    Yellow rice borer       & 23 &  2 &  5 & 0.920 & 0.821 & 0.868 \\
+    Rice leafhopper         & 25 &  5 &  0 & 0.833 & 1.000 & 0.909 \\
+    Rice water weevil       & 45 &  3 &  2 & 0.938 & 0.957 & 0.947 \\
+    Rice gall midge         & 23 &  1 &  1 & 0.958 & 0.958 & 0.958 \\
+    Paddy stem maggot       &  9 &  0 &  0 & 1.000 & 1.000 & 1.000 \\
+    \bottomrule
+  \end{tabular}}
+  \caption{Per-class performance at $\text{conf}=0.25$,
+           $\text{IoU}\geq0.50$. Sorted by F1-score ascending.}
+  \label{tab:perclass_conf}
+\end{table}
+
+As shown in Table~\ref{tab:perclass_conf} and
+Figure~\ref{fig:app_f1_fpfn}, results fall into three tiers:
+\textbf{high} ($\text{F1} \geq 0.90$): paddy stem maggot, rice gall
+midge, rice water weevil, and rice leafhopper; \textbf{moderate}
+($0.80$--$0.90$): rice leaf roller, yellow rice borer, and rice leaf
+caterpillar; \textbf{low} ($\text{F1} < 0.80$): Asiatic rice borer
+(0.698), small brown planthopper (0.721), and brown planthopper
+(0.767), which together account for 82/115 FP (71.3\%) and 31/50 FN
+(62.0\%).
+
+\subsection{Confusion Matrix and Wrong-Class Errors}
+
+As shown in Figure~\ref{fig:app_confusion}, among 19 WRONG\_CLASS
+instances, errors concentrate on BPH\,$\leftrightarrow$\,SBPH (10
+cases, 52.6\%) and ARB\,$\leftrightarrow$\,YRB (3 cases, 15.8\%).
+Representative examples of misclassified detections are illustrated
+in Figure~\ref{fig:app_wrong_class}. Since localization was accurate
+in all WRONG\_CLASS instances, the bottleneck lies in the
+classification head rather than the feature backbone.
+
+\subsection{False Positives and False Negatives}
+
+\textbf{FP (115 total in Table~\ref{tab:perclass_conf}):} The table reports FP per class including both unmatched false positives and wrong-class detections. The separate error-labeling pass identified 96 unmatched false positives and 19 wrong-class detections. Asiatic rice borer dominates the table-level FP count (45 FP, Precision = 0.598) due to false activations on stems and leaf midribs. Brown planthopper contributes 22 FP (Precision = 0.699) from BPH/SBPH inter-class confusion and background artifacts.
+
+\textbf{FN (50 total, miss rate = 11.9\%):} As shown in
+Figure~\ref{fig:app_fn_examples}, 31 FN instances belong to the same
+three low-tier classes. Figure~\ref{fig:app_size} further
+demonstrates that FN bounding boxes are consistently smaller in
+$\sqrt{\text{area}}$ than TP boxes; at IMGSZ = 416, small instances
+are severely downsampled, with partial occlusion and border proximity
+compounding the problem.
+
+YOLO11s exhibits two independent failure modes: \textbf{(1)
+morphological confusion} (BPH/SBPH, ARB/YRB) --- a
+classification-head problem evidenced by the confusion matrix
+(Figure~\ref{fig:app_confusion}); and \textbf{(2) degraded recall
+for small objects} at IMGSZ = 416 --- a resolution problem
+evidenced by the size distribution in
+Figure~\ref{fig:app_size}. Mitigation strategies include increasing
+resolution to 640, hard-negative mining, and targeted augmentation
+for confusable pairs.
+
+
+\section{Conclusion}
+
+This study has developed a rice pest detection and advisory support system intended to support Vietnamese farmers. By employing the YOLO11s model, the system achieves strong performance in pest recognition, with an F1-score of 0.8971 and mAP50 of 0.9125 on the test set. The integration of a detection-based computer vision module with a RAG-based advisory component, supported by a Vietnamese agricultural knowledge base, enables not only accurate pest identification but also the provision of relevant advisory information on symptoms, diagnosis, and management practices. Advisory evaluation further shows that using a correct class prior as retrieval context improves Class Hit@5 from 0.650 to 0.975, while retrieval augmentation increases semantic similarity from 0.490 to 0.540 over the No-RAG baseline.
+
+Despite the promising results, the system has certain limitations. Morphological confusion persists among visually similar pest classes, and detection performance tends to decrease for small or occluded objects. Future work will focus on improving model performance through higher input resolution, hard-negative mining, and targeted data augmentation for confusable pest categories. It will also expand the advisory benchmark with more farmer-like questions, expert human evaluation, and broader coverage of rice diseases and other major crops in Vietnam.
+
+\section*{Limitations}
+
+The current system has three main limitations. First, morphological confusion between visually similar classes (e.g., BPH/SBPH, ARB/YRB) remains unresolved at the current input resolution. Second, the knowledge base is constructed through rule-based extraction and may contain incomplete sections in certain pest profiles, making it unsuitable as a replacement for expert field diagnosis. This is also reflected by the lower Section Hit@5 score, which indicates that class-aware retrieval does not always select the most appropriate advisory subsection. Third, the advisory benchmark is small and manually designed; the reported generation metrics should therefore be interpreted as in-domain evidence rather than a broad user-facing safety evaluation.
+
+\section*{Acknowledgments}
+
+The authors thank the Faculty of Information Science and Engineering, University of Information Technology, VNU-HCM for supporting this research. We also acknowledge the original dataset creators and the agricultural experts involved in validating the dataset used in this study.
+
+% -------------------------------------------------------
+%  Inline bibliography (no external .bib file needed)
+% -------------------------------------------------------
+\begin{thebibliography}{}
+
+\bibitem[\protect\citename{Akhtar et al., }2025]{akhtar2025edge}
+M.~H. Akhtar, I.~Eksheir, and T.~Shanableh.
+\newblock 2025.
+\newblock Edge-optimized deep learning architectures for classification of agricultural insects with mobile deployment.
+\newblock {\em Information}, 16(5):348.
+
+\bibitem[\protect\citename{Belfort, }2016]{fao_sri_vietnam}
+S.~K. Belfort.
+\newblock 2016.
+\newblock System of {Rice} {Intensification} in {Vietnam}: {Doing} More with Less.
+\newblock Technical report, Food and Agriculture Organization of the United Nations (FAO), Rome, Italy.
+
+\bibitem[\protect\citename{Darmawan et al., }2024]{darmawan2024dml}
+H.~Darmawan, M.~Yuliana, M.~Z.~S. Hadi, and A.~K. Sangaiah.
+\newblock 2024.
+\newblock Deep metric learning with augmented latent fusion and response-based knowledge distillation on edge device for paddy pests and disease identification.
+\newblock {\em International Journal on Informatics Visualization}, 8(3-2):1703--1712.
+
+\bibitem[\protect\citename{Lewis et al., }2020]{lewis2020rag}
+P.~Lewis, E.~Perez, A.~Piktus, et~al.
+\newblock 2020.
+\newblock Retrieval-augmented generation for knowledge-intensive {NLP} tasks.
+\newblock In {\em Advances in Neural Information Processing Systems (NeurIPS)}, volume~33, pages 9459--9474.
+
+\bibitem[\protect\citename{Li et al., }2025]{li2025yolomslp}
+J.~Li, Y.~Xu, J.~Lu, et~al.
+\newblock 2025.
+\newblock Lightweight multi-scale rice pest recognition model based on improved {YOLOv11n}.
+\newblock {\em Transactions of the Chinese Society of Agricultural Engineering}, 41(17):175--183.
+
+\bibitem[\protect\citename{Lin, }2004]{lin2004rouge}
+C.-Y. Lin.
+\newblock 2004.
+\newblock {ROUGE}: A package for automatic evaluation of summaries.
+\newblock In {\em Text Summarization Branches Out}, pages 74--81.
+
+\bibitem[\protect\citename{Oerke, }2006]{oerke2006crop}
+E.-C. Oerke.
+\newblock 2006.
+\newblock Crop losses to pests.
+\newblock {\em The Journal of Agricultural Science}, 144(1):31--43.
+\newblock \url{https://doi.org/10.1017/S0021859605005708}.
+
+\bibitem[\protect\citename{Quach et al., }2024]{quach2024rice}
+L.-D. Quach, Q.~K. Nguyen, Q.~A. Nguyen, and L.~T.~T. Lan.
+\newblock 2024.
+\newblock Rice pest dataset supports the construction of smart farming systems.
+\newblock {\em Data in Brief}, 52:110046.
+
+\bibitem[\protect\citename{Quach et al., }2025]{quach2026xai}
+L.-D. Quach, D.-T. Le, C.-N. Nguyen, and N.~Thai-Nghe.
+\newblock 2025.
+\newblock Explainable {AI} for agriculture: Teacher-student learning in rice pest classification.
+\newblock In {\em Intelligent Systems and Data Science}, volume 2713 of {\em Communications in Computer and Information Science}, pages 31--45. Springer, Singapore.
+
+\bibitem[\protect\citename{Redmon et al., }2016]{redmon2016yolo}
+J.~Redmon, S.~Divvala, R.~Girshick, and A.~Farhadi.
+\newblock 2016.
+\newblock You only look once: Unified, real-time object detection.
+\newblock In {\em Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition (CVPR)}, pages 779--788.
+
+\bibitem[\protect\citename{Reimers and Gurevych, }2019]{reimers2019sentencebert}
+N.~Reimers and I.~Gurevych.
+\newblock 2019.
+\newblock Sentence-{BERT}: Sentence embeddings using {Siamese} {BERT}-networks.
+\newblock In {\em Proceedings of EMNLP-IJCNLP}, pages 3982--3992.
+
+\bibitem[\protect\citename{Samkeun5, }2024]{roboflow_ricepest}
+Samkeun5.
+\newblock 2024.
+\newblock Rice pest {BB}.
+\newblock \url{https://universe.roboflow.com/samkeun5/rice-pest-bb-fbkyn}. Accessed: 26 June 2026.
+
+\bibitem[\protect\citename{Shoaib et al., }2025]{shoaib2025deep}
+M.~Shoaib, A.~Sadeghi-Niaraki, F.~Ali, I.~Hussain, and S.~Khalid.
+\newblock 2025.
+\newblock Leveraging deep learning for plant disease and pest detection: a comprehensive review and future directions.
+\newblock {\em Frontiers in Plant Science}, 16:1538163.
+\newblock \url{https://doi.org/10.3389/fpls.2025.1538163}.
+
+\bibitem[\protect\citename{Ultralytics, }2023]{ultralytics_yolov8}
+Ultralytics.
+\newblock 2023.
+\newblock {YOLOv8} documentation.
+\newblock \url{https://docs.ultralytics.com/models/yolov8/}. Accessed: 26 June 2026.
+
+\bibitem[\protect\citename{Ultralytics, }2024]{ultralytics_yolo11}
+Ultralytics.
+\newblock 2024.
+\newblock {YOLO11} documentation.
+\newblock \url{https://docs.ultralytics.com/models/yolo11/}. Accessed: 26 June 2026.
+
+\bibitem[\protect\citename{Jocher et al., }2026]{ultralytics_yolo26}
+G.~Jocher, J.~Qiu, J.~Liu, J.~Lyu, F.~C. Akyon, and M.~E. Kalfaoglu.
+\newblock 2026.
+\newblock {Ultralytics YOLO26}: Unified real-time end-to-end vision models.
+\newblock {\em arXiv preprint arXiv:2606.03748}.
+\newblock \url{https://arxiv.org/abs/2606.03748}.
+
+\bibitem[\protect\citename{Yuan et al., }2026]{yuan2026hda}
+S.~Yuan, Y.~Duan, H.~Su, X.~Zhou, and Y.~Hao.
+\newblock 2026.
+\newblock {HDA-YOLO}: a hierarchical and densely-fused attention network for rice pest detection in complex agricultural environments.
+\newblock {\em Frontiers in Plant Science}, 17:1763650.
+\newblock \url{https://doi.org/10.3389/fpls.2026.1763650}.
+
+\bibitem[\protect\citename{Zhang et al., }2020]{zhang2020bertscore}
+T.~Zhang, V.~Kishore, F.~Wu, K.~Q. Weinberger, and Y.~Artzi.
+\newblock 2020.
+\newblock {BERTScore}: Evaluating text generation with {BERT}.
+\newblock In {\em International Conference on Learning Representations}.
+\newblock \url{https://openreview.net/forum?id=SkeHuCVFDr}.
+
+\bibitem[\protect\citename{Liu et al., }2026]{liu2026tarag}
+L.~Liu, S.~Li, J.~Qi, Z.~Yuan, and P.~Yang.
+\newblock 2026.
+\newblock {TARAG}: a time-aware retrieval-augmented generation framework for supporting precision crop pest and disease management through large language models.
+\newblock {\em Computers and Electronics in Agriculture}, 248:111786.
+\newblock \url{https://doi.org/10.1016/j.compag.2026.111786}.
+
+\bibitem[\protect\citename{Wu et al., }2025]{wu2026cropgraphrag}
+H.~Wu, N.~Xie, X.~Wang, J.~Fan, Y.~Li, and Z.~Meng.
+\newblock 2025.
+\newblock Crop {GraphRAG}: pest and disease knowledge base {Q\&A} system for sustainable crop protection.
+\newblock {\em Frontiers in Plant Science}, 16:1696872.
+\newblock \url{https://doi.org/10.3389/fpls.2025.1696872}.
+
+\bibitem[\protect\citename{Zhang, }2025]{zhang2026demeter}
+S.~Zhang.
+\newblock 2025.
+\newblock Chat {Demeter}: a multi-agent system for plant disease diagnosis integrating {CNN}-transformer models.
+\newblock {\em Frontiers in Plant Science}, 16:1695227.
+\newblock \url{https://doi.org/10.3389/fpls.2025.1695227}.
+
+\end{thebibliography}
+
+\appendix
+
+\section{Per-Class Detection Visualizations}
+\label{sec:appendix}
+
+This appendix provides additional visualizations referenced in the error analysis section,
+including FP/FN counts per class, confusion matrix, and representative WRONG\_CLASS
+prediction examples.
+
+\begin{figure}[h]
+  \includegraphics[width=\columnwidth]{fp_fn_per_class.png}
+  \caption{FP and FN counts per class (left) and F1-score per class (right)
+           at $\text{conf}=0.25$.}
+  \label{fig:app_f1_fpfn}
+\end{figure}
+
+\begin{figure}[h]
+  \includegraphics[width=0.8\columnwidth]{confusion_matrix.png}
+  \caption{Confusion matrix normalized by GT row totals
+           (TP and WRONG\_CLASS only; FN excluded).}
+  \label{fig:app_confusion}
+\end{figure}
+
+\begin{figure}[h]
+  \includegraphics[width=\columnwidth]{wrong_class_examples.png}
+  \caption{Representative WRONG\_CLASS predictions.
+           Green: GT box; red: model prediction.}
+  \label{fig:app_wrong_class}
+\end{figure}
+
+\begin{figure}[h]
+  \includegraphics[width=\columnwidth]{fn_top_images.png}
+  \caption{Images with the highest FN counts. Blue dashed: missed GT boxes;
+           green: correct detections.}
+  \label{fig:app_fn_examples}
+\end{figure}
+
+\begin{figure}[h]
+  \includegraphics[width=\columnwidth]{size_tp_vs_fn.png}
+  \caption{GT bounding-box size ($\sqrt{\text{area}}$, pixels) for TP vs.\ FN
+           instances (left) and median FN size per class (right).}
+  \label{fig:app_size}
+\end{figure}
+
+\end{document}
