@@ -1,0 +1,50 @@
+id,class_id,target_class,intent,expected_section,question
+1,asiatic_rice_borer,sâu đục thân lúa,symptoms,damage_symptoms,Sâu đục thân lúa gây ra những triệu chứng gì trên cây lúa?
+2,asiatic_rice_borer,sâu đục thân lúa,diagnosis,field_diagnosis,Làm thế nào để nhận biết ruộng lúa đang bị sâu đục thân lúa gây hại?
+3,asiatic_rice_borer,sâu đục thân lúa,treatment,management_ipm,Tôi nên áp dụng biện pháp nào để quản lý sâu đục thân lúa?
+4,asiatic_rice_borer,sâu đục thân lúa,prevention,warnings,Cần lưu ý gì để phòng ngừa sâu đục thân lúa?
+
+5,brown_plant_hopper,rầy nâu,symptoms,damage_symptoms,Rầy nâu gây ra những biểu hiện gì trên cây lúa?
+6,brown_plant_hopper,rầy nâu,diagnosis,field_diagnosis,Làm sao xác định ruộng lúa đang bị rầy nâu tấn công?
+7,brown_plant_hopper,rầy nâu,treatment,management_ipm,Tôi nên xử lý rầy nâu bằng những biện pháp nào?
+8,brown_plant_hopper,rầy nâu,prevention,warnings,Có những khuyến cáo nào để phòng ngừa rầy nâu?
+
+9,paddy_stem_maggot,ruồi đục nõn lúa,symptoms,damage_symptoms,Ruồi đục nõn lúa gây ra những triệu chứng gì trên cây lúa?
+10,paddy_stem_maggot,ruồi đục nõn lúa,diagnosis,field_diagnosis,Làm thế nào để nhận biết ruộng lúa đang bị ruồi đục nõn lúa gây hại?
+11,paddy_stem_maggot,ruồi đục nõn lúa,treatment,management_ipm,Tôi nên áp dụng biện pháp nào để quản lý ruồi đục nõn lúa?
+12,paddy_stem_maggot,ruồi đục nõn lúa,prevention,warnings,Cần lưu ý gì để phòng ngừa ruồi đục nõn lúa?
+
+13,rice_gall_midge,muỗi hành,symptoms,damage_symptoms,Muỗi hành gây ra những triệu chứng gì trên cây lúa?
+14,rice_gall_midge,muỗi hành,diagnosis,field_diagnosis,Làm thế nào để nhận biết ruộng lúa đang bị muỗi hành gây hại?
+15,rice_gall_midge,muỗi hành,treatment,management_ipm,Tôi nên áp dụng biện pháp nào để quản lý muỗi hành?
+16,rice_gall_midge,muỗi hành,prevention,warnings,Cần lưu ý gì để phòng ngừa muỗi hành?
+
+17,rice_leaf_caterpillar,sâu ăn lá lúa,symptoms,damage_symptoms,Sâu ăn lá lúa gây ra những triệu chứng gì trên cây lúa?
+18,rice_leaf_caterpillar,sâu ăn lá lúa,diagnosis,field_diagnosis,Làm thế nào để nhận biết ruộng lúa đang bị sâu ăn lá lúa gây hại?
+19,rice_leaf_caterpillar,sâu ăn lá lúa,treatment,management_ipm,Tôi nên áp dụng biện pháp nào để quản lý sâu ăn lá lúa?
+20,rice_leaf_caterpillar,sâu ăn lá lúa,prevention,warnings,Cần lưu ý gì để phòng ngừa sâu ăn lá lúa?
+
+21,rice_leaf_hopper,rầy xanh,symptoms,damage_symptoms,Rầy xanh gây ra những triệu chứng gì trên cây lúa?
+22,rice_leaf_hopper,rầy xanh,diagnosis,field_diagnosis,Làm thế nào để nhận biết ruộng lúa đang bị rầy xanh gây hại?
+23,rice_leaf_hopper,rầy xanh,treatment,management_ipm,Tôi nên áp dụng biện pháp nào để quản lý rầy xanh?
+24,rice_leaf_hopper,rầy xanh,prevention,warnings,Cần lưu ý gì để phòng ngừa rầy xanh?
+
+25,rice_leaf_roller,sâu cuốn lá lúa,symptoms,damage_symptoms,Sâu cuốn lá lúa gây ra những triệu chứng gì trên cây lúa?
+26,rice_leaf_roller,sâu cuốn lá lúa,diagnosis,field_diagnosis,Làm thế nào để nhận biết ruộng lúa đang bị sâu cuốn lá lúa gây hại?
+27,rice_leaf_roller,sâu cuốn lá lúa,treatment,management_ipm,Tôi nên áp dụng biện pháp nào để quản lý sâu cuốn lá lúa?
+28,rice_leaf_roller,sâu cuốn lá lúa,prevention,warnings,Cần lưu ý gì để phòng ngừa sâu cuốn lá lúa?
+
+29,rice_water_weevil,mọt nước hại lúa,symptoms,damage_symptoms,Mọt nước hại lúa gây ra những triệu chứng gì trên cây lúa?
+30,rice_water_weevil,mọt nước hại lúa,diagnosis,field_diagnosis,Làm thế nào để nhận biết ruộng lúa đang bị mọt nước hại lúa gây hại?
+31,rice_water_weevil,mọt nước hại lúa,treatment,management_ipm,Tôi nên áp dụng biện pháp nào để quản lý mọt nước hại lúa?
+32,rice_water_weevil,mọt nước hại lúa,prevention,warnings,Cần lưu ý gì để phòng ngừa mọt nước hại lúa?
+
+33,small_brown_plant_hopper,rầy nâu nhỏ,symptoms,damage_symptoms,Rầy nâu nhỏ gây ra những triệu chứng gì trên cây lúa?
+34,small_brown_plant_hopper,rầy nâu nhỏ,diagnosis,field_diagnosis,Làm thế nào để nhận biết ruộng lúa đang bị rầy nâu nhỏ gây hại?
+35,small_brown_plant_hopper,rầy nâu nhỏ,treatment,management_ipm,Tôi nên áp dụng biện pháp nào để quản lý rầy nâu nhỏ?
+36,small_brown_plant_hopper,rầy nâu nhỏ,prevention,warnings,Cần lưu ý gì để phòng ngừa rầy nâu nhỏ?
+
+37,yellow_rice_borer,sâu đục thân vàng,symptoms,damage_symptoms,Sâu đục thân vàng gây ra những triệu chứng gì trên cây lúa?
+38,yellow_rice_borer,sâu đục thân vàng,diagnosis,field_diagnosis,Làm thế nào để nhận biết ruộng lúa đang bị sâu đục thân vàng gây hại?
+39,yellow_rice_borer,sâu đục thân vàng,treatment,management_ipm,Tôi nên áp dụng biện pháp nào để quản lý sâu đục thân vàng?
+40,yellow_rice_borer,sâu đục thân vàng,prevention,warnings,Cần lưu ý gì để phòng ngừa sâu đục thân vàng?

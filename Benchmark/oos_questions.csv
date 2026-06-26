@@ -1,0 +1,6 @@
+id,category,question,expected_behavior
+1,ambiguous,Lúa của tôi bị vàng lá toàn ruộng nhưng không thấy loại sâu nào trong hệ thống, nguyên nhân là gì?,need_more_information
+2,out_of_scope,Giá thuốc đặc trị rầy nâu hiện nay trên thị trường là bao nhiêu?,refuse_not_in_kb
+3,out_of_scope,Tôi nên chọn giống lúa nào để đạt năng suất cao nhất ở Đồng bằng sông Cửu Long?,refer_expert
+4,ambiguous,Cây lúa của tôi có vẻ bất thường, tôi nên làm gì?,need_more_information
+5,multi_pest,Nếu ruộng lúa vừa có rầy nâu vừa có sâu cuốn lá thì nên xử lý như thế nào?,refer_expert

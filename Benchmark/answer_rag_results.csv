@@ -1,0 +1,245 @@
+﻿question_id,class_id,question,generated_answer
+1,asiatic_rice_borer,Sâu đục thân lúa gây ra những triệu chứng gì trên cây lúa?,"Xin lỗi, tôi không tìm thấy thông tin cụ thể về các triệu chứng do sâu đục thân lúa gây ra trên cây lúa trong các tài liệu được cung cấp."
+2,asiatic_rice_borer,Làm thế nào để nhận biết ruộng lúa đang bị sâu đục thân lúa gây hại?,"Dựa trên thông tin hiện có, không có mô tả cụ thể về các dấu hiệu nhận biết ruộng lúa đang bị sâu đục thân lúa gây hại.
+
+Thông tin trong ngữ cảnh đề cập đến các loại sâu bệnh khác như:
+*   Sâu đục thân lúa (paddy stem maggot - Hydrellia sasakii) với ngưỡng gây hại là 25% lá bị hư hại [S4].
+*   Muỗi hành (rice gall midge - Orseolia oryzae) với các triệu chứng như chồi bạc hay ""lá hành"" thay cho lá trung tâm, hình thành ống rỗng hoặc u nang hình ống ở gốc chồi bị nhiễm, cây còi cọc và lá biến dạng, héo, cuộn tròn [S6].
+
+Nếu bạn muốn biết thêm về dấu hiệu của sâu đục thân lúa, vui lòng cung cấp thêm thông tin hoặc kiểm tra các nguồn tài liệu khác."
+3,asiatic_rice_borer,Tôi nên áp dụng biện pháp nào để quản lý sâu đục thân lúa?,"Dựa trên thông tin được cung cấp, không có biện pháp cụ thể nào để quản lý sâu đục thân lúa được đề cập. Các biện pháp trong tài liệu tập trung vào sâu cuốn lá nhỏ, rầy lưng trắng và sâu vòi voi hại lúa, cùng với quản lý nước và phân bón chung cho cây lúa."
+4,asiatic_rice_borer,Cần lưu ý gì để phòng ngừa sâu đục thân lúa?,"Để phòng ngừa sâu đục thân lúa, bạn nên lưu ý các điểm sau dựa trên các biện pháp canh tác tổng hợp:**
+
+*   **Quản lý nước hợp lý:**"
+5,brown_plant_hopper,Rầy nâu gây ra những biểu hiện gì trên cây lúa?,"Rầy nâu (brown plant hopper) gây ra các biểu hiện sau trên cây lúa:
+
+*   **Cháy rầy (hopperburn):** Cây lúa bị vàng,"
+6,brown_plant_hopper,Làm sao xác định ruộng lúa đang bị rầy nâu tấn công?,"(Dung model du phong: gemini-2.5-flash-lite)
+
+Để xác định ruộng lúa đang bị rầy nâu tấn công, bạn cần quan sát các dấu hiệu sau:
+
+*   **Quan sát trực tiếp rầy:** Rầy nâu thường tập trung ở mặt dưới lá, bẹ lá lúa, đặc biệt là ở các lóng thân. Chúng có thể có màu nâu hoặc vàng nâu.
+*   **Triệu chứng trên cây lúa:**
+    *   Rầy chích hút nhựa cây làm cho cây lúa bị vàng, khô héo.
+    *   Ở giai đoạn nặng, rầy gây ra hiện tượng ""cháy"" từng chòm trên ruộng.
+    *   Rầy trưởng thành có cánh, còn rầy non thì không cánh."
+7,brown_plant_hopper,Tôi nên xử lý rầy nâu bằng những biện pháp nào?,"(Dung model du phong: gemini-2.5-flash-lite)
+
+Để xử lý rầy nâu, bạn có thể áp dụng các biện pháp sau:
+
+*   **Thăm đồng thường xuyên:** Theo dõi chặt chẽ diễn biến phát sinh gây hại của rầy nâu trên đồng ruộng [S2, S3, S6].
+*   **Áp dụng biện pháp phòng chống sinh vật:** Tuân theo các quy trình, hướng dẫn của cơ quan chuyên ngành bảo vệ thực vật [S2].
+*   **Sử dụng thuốc bảo vệ thực vật:** Khi mật độ rầy cao, cần sử dụng thuốc đặc hiệu theo nguyên tắc 4 đúng (đúng thuốc, đúng lúc, đúng nồng độ liều lượng và đúng cách) [S3, S6]. Ưu tiên các loại thuốc có nguồn gốc sinh học, thảo mộc và luân phiên sử dụng các nhóm hoạt chất khác nhau để hạn chế kháng thuốc [S2].
+*   **Quản lý nước:** Rút nước ruộng tối thiểu 2 lần trong vụ, mỗi lần rút nước đảm bảo ruộng khô 3 ngày liên tục [S1]."
+8,brown_plant_hopper,Có những khuyến cáo nào để phòng ngừa rầy nâu?,"(Dung model du phong: gemini-2.5-flash-lite)
+
+Để phòng ngừa rầy nâu, bạn có thể áp dụng các biện pháp sau:
+
+*   **Quản lý nước ruộng:** Thực hiện rút nước tối thiểu 02 lần trong vụ, mỗi lần rút nước sau bón phân thúc 5-7 ngày. Đảm bảo ruộng khô liên tục ít nhất 03 ngày. Đối với vùng ruộng trũng hoặc mưa nhiều, rút nước tối thiểu 01 lần trong giai đoạn 28-50 ngày sau sạ và đảm bảo ruộng khô 03 ngày liên tục [S1].
+*   **Bón phân cân đối:** Bón phân hợp lý, cân đối theo nhu cầu của cây lúa ở từng giai đoạn sinh trưởng, tránh bón thừa đạm [S1, S2].
+*   **Kiểm tra đồng ruộng thường xuyên:** Theo dõi mật độ rầy nâu để có biện pháp xử lý kịp thời khi cần thiết. Theo báo cáo, mật độ rầy nâu phổ biến có thể từ 100-300 con/m2, cao có thể lên tới 1.000-4.000 con/m2 tùy theo khu vực và thời điểm [S5]."
+9,paddy_stem_maggot,Ruồi đục nõn lúa gây ra những triệu chứng gì trên cây lúa?,"Ruồi đục nõn lúa (rice gall midge) gây ra các triệu chứng sau trên cây lúa:
+*   Sự xuất hiện của chồi bạc hoặc ""lá hành"" thay thế cho lá trung tâm [S5].
+*   Triệu chứng này có thể xuất hiện từ giai đoạn mạ đến giai đoạn ra hoa [S5].
+*   Hình thành một khoang rỗng hoặc u ống (gall) ở gốc thân lúa bị nhiễm [S5].
+*   Các chồi bị nhiễm bệnh sẽ ức chế sự phát triển của lá và không thể tạo ra bông lúa [S5].
+*   Cây bị lùn, lá bị biến dạng, héo và cuộn lại [S5]."
+10,paddy_stem_maggot,Làm thế nào để nhận biết ruộng lúa đang bị ruồi đục nõn lúa gây hại?,"Để nhận biết ruộng lúa đang bị ruồi đục nõn lúa (rice gall midge) gây hại, bà con có thể dựa vào các dấu hiệu sau:
+
+*   **Chồi bạc hoặc lá hành (silver shoot/onion leaf)**: Đây là triệu chứng nổi bật nhất, lá trung tâm bị biến đổi thành chồi bạc hoặc có hình dạng giống lá hành [S4].
+*   **Ống mọng (tubular gall)**: Tại gốc của thân cây bị nhiễm sẽ hình thành một khoang rỗng hoặc ống mọng [S4].
+*   **Cây lúa bị lùn và biến dạng**: Cây có thể bị lùn, lá bị biến dạng, héo và cuộn lại [S4].
+*   **Thân cây không phát triển lá và không trổ bông**: Các thân cây bị nhiễm sẽ ngừng phát triển lá và không thể tạo ra bông lúa [S4].
+
+Các triệu chứng này có thể xuất hiện từ giai đoạn mạ cho đến giai đoạn ra hoa của cây lúa [S4]."
+11,paddy_stem_maggot,Tôi nên áp dụng biện pháp nào để quản lý ruồi đục nõn lúa?,"Hiện tại, thông tin cụ thể về biện pháp quản lý ruồi đục nõn lúa không có trong các tài liệu tôi đang tham khảo.
+
+Tuy nhiên, nếu bạn đang gặp vấn"
+12,paddy_stem_maggot,Cần lưu ý gì để phòng ngừa ruồi đục nõn lúa?,"Để phòng ngừa ruồi đục nõn lúa, bạn có thể lưu ý các biện pháp sau:
+
+*   **Kiểm soát cỏ dại:** Loại bỏ cỏ dại ở các khu vực xung quanh ruộng lúa và trên bờ bao vào mùa xuân, gần thời điểm gieo sạ để giảm sự phát tán của ruồi đục nõn [S4].
+*   **Áp dụng phương pháp gieo sạ khô hoặc gieo hàng:** Gieo"
+13,rice_gall_midge,Muỗi hành gây ra những triệu chứng gì trên cây lúa?,"Tôi xin lỗi, nhưng thông tin trong các tài liệu tôi có không đề cập đến triệu chứng do muỗi hành gây ra trên cây lúa. Các tài liệu hiện có nói về triệu chứng của rầy lưng trắng [S1], sâu cuốn lá [S2], sâu đục thân [S3], mọt nước hại lúa [S4], [S5] và rầy nâu [S6].
+
+Để có thông tin chính xác về triệu chứng của muỗi hành, bạn có thể tham khảo thêm từ các nguồn khác hoặc kiểm tra thực tế trên đồng ruộng."
+14,rice_gall_midge,Làm thế nào để nhận biết ruộng lúa đang bị muỗi hành gây hại?,"Rất tiếc, thông tin về cách nhận biết ruộng lúa bị muỗi hành gây hại không có trong các tài liệu tôi được cung cấp [S1, S2, S3, S4, S5, S6].
+
+Bạn có muốn tìm hiểu về dấu hiệu gây hại của các loại sâu bệnh khác như rầy lưng trắng, sâu cuốn lá hay mọt nước hại lúa không?"
+15,rice_gall_midge,Tôi nên áp dụng biện pháp nào để quản lý muỗi hành?,"(Dung model du phong: gemini-2.5-flash-lite)
+
+Để quản lý muỗi hành, bạn có thể áp dụng các biện pháp sau:
+
+*   **Kiểm soát cỏ dại:** Loại bỏ cỏ dại xung quanh ruộng lúa có thể giúp giảm thiểu sự tấn công của muỗi hành [S3].
+*   **Gieo sạ khô:** Phương pháp gieo sạ khô, giữ ẩm đất cho đến khi cây lúa cứng cáp (khoảng 4-6 tuần) trước khi cho nước vào ruộng, giúp cây lúa chịu được thiệt hại do muỗi hành tốt hơn [S3].
+*   **Quản lý nước:** Ngập nước vào mùa đông có thể hỗ trợ kiểm soát muỗi hành [S3].
+*   **Sử dụng thuốc bảo vệ thực vật:** Trong trường hợp mật độ quần thể cao và gây hại nghiêm trọng, có thể cân nhắc sử dụng thuốc bảo vệ thực vật. Nên ưu tiên áp dụng thuốc ở rìa ruộng [S3]. Cần lưu ý áp dụng thuốc trừ muỗi hành trưởng thành trước khi chúng đẻ trứng [S4].
+
+Bạn nên kiểm tra đồng ruộng thường xuyên để phát hiện sớm và có biện pháp xử lý kịp thời."
+16,rice_gall_midge,Cần lưu ý gì để phòng ngừa muỗi hành?,"Trong thông tin hiện có, tôi chưa tìm thấy các lưu ý cụ thể để phòng ngừa muỗi hành.
+
+Bạn có thể xác nhận lại tên sâu bệnh hoặc cung cấp thêm thông tin không?"
+17,rice_leaf_caterpillar,Sâu ăn lá lúa gây ra những triệu chứng gì trên cây lúa?,"Dựa trên thông tin được cung cấp, các triệu chứng do sâu ăn lá lúa gây ra không được mô tả chi tiết.
+
+Tuy nhiên, có một số thông tin liên quan đến các"
+18,rice_leaf_caterpillar,Làm thế nào để nhận biết ruộng lúa đang bị sâu ăn lá lúa gây hại?,"Để nhận biết ruộng lúa đang bị sâu ăn lá gây hại, bà con có thể dựa vào các dấu hiệu sau:
+*   **Lá lúa bị cuốn dọc:** Lá lúa sẽ bị cuốn lại theo chiều dọc, bên trong có thể tìm thấy ấu trùng sâu [S6].
+*   **Mất mô xanh trên lá:** Ấu trùng cạo lớp mô xanh của lá, khiến phần lá bị hại trở nên trắng và khô [S6].
+*   **Vết cắn và mảng trắng:** Trên lá có thể thấy các mảng trắng do sâu ăn, lá bị cuốn, cuộn và thường dính vào nhau bởi tơ [S6].
+*   **Ruộng lúa có màu trắng cháy:** Khi bị nhiễm nặng, cả ruộng lúa có thể xuất hiện màu trắng cháy [S6]."
+19,rice_leaf_caterpillar,Tôi nên áp dụng biện pháp nào để quản lý sâu ăn lá lúa?,"Để quản lý sâu ăn lá lúa, bạn có thể áp dụng các biện pháp sau dựa trên thông tin hiện có:
+
+*   **Quản lý nước hiệu quả**: Thực"
+20,rice_leaf_caterpillar,Cần lưu ý gì để phòng ngừa sâu ăn lá lúa?,"Để phòng ngừa sâu ăn lá lúa, bạn cần lưu ý các biện pháp sau:
+
+*   **Làm đất kỹ**: Thực hiện làm đất kỹ lưỡng (làm dầm kỹ"
+21,rice_leaf_hopper,Rầy xanh gây ra những triệu chứng gì trên cây lúa?,"(Dung model du phong: gemini-2.5-flash-lite)
+
+Rầy xanh gây ra các triệu chứng sau trên cây lúa:
+
+*   **Vàng lá, nâu và khô cây:** Rầy xanh chích hút nhựa cây, làm cây bị mất sức, dẫn đến hiện tượng vàng lá, sau đó chuyển sang nâu và khô héo [S5].
+*   **Vết cháy do rầy (Hopper burn):** Khi bị hại nặng, cây lúa có biểu hiện khô cháy từng chòm, tạo thành các mảng tròn màu nâu trên đồng ruộng [S5].
+*   **Làm giảm khả năng đẻ nhánh và vô gạo:** Sự chích hút của rầy ảnh hưởng đến quá trình sinh trưởng, làm giảm khả năng đẻ nhánh và ảnh hưởng đến việc hình thành hạt [S5].
+*   **Truyền bệnh virus:** Rầy xanh là môi giới truyền một số bệnh virus nguy hiểm trên lúa như bệnh lùn sọc đen [S2, S3, S5]."
+22,rice_leaf_hopper,Làm thế nào để nhận biết ruộng lúa đang bị rầy xanh gây hại?,"Thông tin về cách nhận biết ruộng lúa bị rầy xanh gây hại hiện không có trong các tài liệu tôi đang tham khảo.
+
+Bạn có muốn tìm hiểu về triệu chứng gây hại của rầy lưng trắng [S1] hoặc rầy nâu [S5] không?"
+23,rice_leaf_hopper,Tôi nên áp dụng biện pháp nào để quản lý rầy xanh?,"Dựa trên thông tin được cung cấp, tôi không tìm thấy các biện pháp quản lý cụ thể cho ""rầy xanh"". Các tài liệu hiện có đề cập đến biện pháp quản lý cho r"
+24,rice_leaf_hopper,Cần lưu ý gì để phòng ngừa rầy xanh?,"Dựa trên thông tin hiện có, tôi không tìm thấy các lưu ý cụ thể để phòng ngừa rầy xanh.
+
+Thông tin trong ngữ cảnh tập trung vào các biện pháp phòng trừ rầy lưng trắng và mọt nước hại lúa."
+25,rice_leaf_roller,Sâu cuốn lá lúa gây ra những triệu chứng gì trên cây lúa?,"(Dung model du phong: gemini-2.5-flash-lite)
+
+Sâu cuốn lá lúa (tên khoa học *Cnaphalocrocis medinalis*) gây hại chủ yếu ở giai đoạn ấu trùng. Triệu chứng nhận biết bao gồm:
+
+*   Ấu trùng sâu cuốn lá sẽ ăn biểu bì mặt trên của lá lúa, tạo thành những vệt trắng dài theo gân lá.
+*   Khi sâu lớn hơn, chúng sẽ cuốn hai mép lá lại với nhau và ăn bên trong, tạo thành ""túi"" hoặc ""ống"" trên lá.
+*   Lá lúa bị hại nặng sẽ chuyển sang màu vàng trắng, khô héo và có thể bị rách."
+26,rice_leaf_roller,Làm thế nào để nhận biết ruộng lúa đang bị sâu cuốn lá lúa gây hại?,"(Dung model du phong: gemini-2.5-flash-lite)
+
+Để nhận biết ruộng lúa bị sâu cuốn lá lúa gây hại, bạn cần quan sát các dấu hiệu sau:
+
+*   **Lá lúa bị cuốn dọc:** Lá lúa bị gấp lại theo chiều dọc, bên trong có sâu non.
+*   **Vết ăn trắng trên lá:** Sâu non ăn phần xanh của lá, để lại các vệt trắng hoặc làm lá bị khô trắng.
+*   **Lá bị cuốn, xoắn và có mạng nhện:** Khi bị hại nặng, lá lúa có thể bị cuốn lại, xoắn lại và đôi khi có mạng nhện bao phủ. Mở lá cuốn ra sẽ thấy sâu non bên trong.
+*   **Hiện tượng cháy xém:** Nếu sâu cuốn lá tấn công nặng, cả ruộng lúa có thể có màu trắng bạc như bị cháy xém [S6]."
+27,rice_leaf_roller,Tôi nên áp dụng biện pháp nào để quản lý sâu cuốn lá lúa?,"(Dung model du phong: gemini-2.5-flash-lite)
+
+Để quản lý sâu cuốn lá lúa, bạn có thể áp dụng các biện pháp sau:
+
+*   **Thăm đồng thường xuyên:** Quan sát kỹ ruộng lúa để phát hiện sớm sự xuất hiện của sâu cuốn lá [S3].
+*   **Vệ sinh đồng ruộng:** Dọn sạch cỏ dại và tàn dư thực vật để loại bỏ nơi trú ẩn của sâu bệnh [S2].
+*   **Quản lý nước hợp lý:** Rút nước ruộng theo đúng quy trình có thể giúp hạn chế sự phát triển của một số đối tượng sâu hại [S1].
+*   **Sử dụng thuốc bảo vệ thực vật:** Khi mật độ sâu cao, cần sử dụng thuốc đặc hiệu theo nguyên tắc 4 đúng (đúng thuốc, đúng liều lượng, đúng lúc, đúng cách). Tuy nhiên, thông tin chi tiết về thuốc và liều lượng không có trong ngữ cảnh này.
+
+**Lưu ý:** Luôn đọc kỹ nhãn thuốc trước khi sử dụng, tuân thủ quy định về đăng ký thuốc tại địa phương và sử dụng đồ bảo hộ lao động đầy đủ."
+28,rice_leaf_roller,Cần lưu ý gì để phòng ngừa sâu cuốn lá lúa?,"(Dung model du phong: gemini-2.5-flash-lite)
+
+Để phòng ngừa sâu cuốn lá lúa, bạn cần lưu ý các điểm sau:
+
+*   **Thăm đồng thường xuyên:** Quan sát kỹ ruộng lúa để phát hiện sớm sự xuất hiện của sâu cuốn lá [S3].
+*   **Vệ sinh đồng ruộng:** Dọn sạch cỏ dại và tàn dư thực vật sau mỗi vụ để loại bỏ nơi trú ẩn và nguồn thức ăn của sâu [S2].
+*   **Quản lý nước hợp lý:** Rút nước định kỳ để làm khô ruộng trong vài ngày liên tục, điều này giúp hạn chế sự phát triển của nhiều loại sâu bệnh, bao gồm cả sâu cuốn lá [S1].
+*   **Sử dụng giống kháng sâu bệnh:** Lựa chọn các giống lúa có khả năng chống chịu tốt với sâu bệnh.
+*   **Kiểm soát mật độ sâu:** Nếu phát hiện mật độ sâu cuốn lá cao, cần có biện pháp xử lý kịp thời theo nguyên tắc 4 đúng (đúng thuốc, đúng liều lượng, đúng lúc, đúng cách) [S3]."
+29,rice_water_weevil,Mọt nước hại lúa gây ra những triệu chứng gì trên cây lúa?,"(Dung model du phong: gemini-2.5-flash-lite)
+
+Mọt nước hại lúa (rice water weevil) gây ra các triệu chứng sau trên cây lúa:
+
+*   Ấu trùng gặm rễ lúa, làm giảm năng suất. Cây bị hại có thể còi cọc, giảm số dảnh và bông do sinh trưởng chậm lại [S5].
+*   Sự phát triển kém và sinh trưởng chậm hơn cũng tạo điều kiện cho cỏ dại phát triển dễ dàng hơn [S5].
+*   Trưởng thành ăn lá lúa, tạo ra các vết rạch dài trên bề mặt lá, nhưng thường không gây thiệt hại kinh tế đáng kể [S5].
+*   Số lượng lớn trưởng thành ăn cây mạ non ngay khi chúng nhú lên khỏi mặt nước có thể làm chết một số cây mạ, nhưng trường hợp này không phổ biến [S5]."
+30,rice_water_weevil,Làm thế nào để nhận biết ruộng lúa đang bị mọt nước hại lúa gây hại?,"(Dung model du phong: gemini-2.5-flash-lite)
+
+Để nhận biết ruộng lúa bị mọt nước hại lúa (rầy nâu) gây hại, bạn cần quan sát các dấu hiệu sau:
+
+*   **Triệu chứng ban đầu:** Xuất hiện các vệt vàng trên lá, sau đó chuyển sang màu nâu và khô héo.
+*   **Vùng khô cháy:** Các mảng ruộng khô và lúa bị đổ rạp theo hình tròn, đặc biệt ở lúa đã chín.
+*   **Cây lúa bị mất sức:** Cây lúa bị khô héo hoàn toàn và trông như bị cháy rơm rạ, hiện tượng này gọi là ""cháy rầy"" (hopper burn) [S6].
+*   **Vị trí tập trung của rầy:** Rầy non và rầy trưởng thành thường tập trung ở gốc cây lúa, phía trên mực nước [S6].
+*   **Dấu hiệu khác:** Có thể thấy nấm bồ hóng (sooty molds) bám ở gốc cây lúa. Cây bị nhiễm virus cũng có thể xuất hiện [S6]."
+31,rice_water_weevil,Tôi nên áp dụng biện pháp nào để quản lý mọt nước hại lúa?,"(Dung model du phong: gemini-2.5-flash-lite)
+
+Để quản lý mọt nước hại lúa, bạn có thể áp dụng các biện pháp sau:
+
+*   **Quản lý nước:** Thực hiện rút nước tối thiểu 02 lần trong vụ, mỗi lần rút nước tốt nhất sau bón phân thúc 5-7 ngày. Đảm bảo ruộng khô tối thiểu 03 ngày liên tục sau mỗi lần rút nước [S1]. Đối với vùng ruộng trũng hoặc mưa nhiều, rút nước tối thiểu 01 lần trong giai đoạn 28-50 ngày sau sạ và giữ ruộng khô 03 ngày liên tục [S1].
+*   **Thăm đồng thường xuyên:** Kiểm tra đồng ruộng để phát hiện sớm sự xuất hiện và gây hại của mọt nước [S2, S5].
+*   **Sử dụng thuốc đặc hiệu:** Khi mật độ mọt nước cao, sử dụng thuốc đặc hiệu theo nguyên tắc 4 đúng (đúng thuốc, đúng lúc, đúng nồng độ, đúng liều lượng) [S2].
+
+Lưu ý, thông tin về mọt nước hại lúa trong ngữ cảnh này chủ yếu đề cập đến rầy lưng trắng. Nếu bạn đang gặp vấn đề với một loại sâu bệnh khác, vui lòng cung cấp thêm thông tin để tôi có thể tư vấn chính xác hơn."
+32,rice_water_weevil,Cần lưu ý gì để phòng ngừa mọt nước hại lúa?,"(Dung model du phong: gemini-2.5-flash-lite)
+
+Để phòng ngừa mọt nước hại lúa, bạn cần lưu ý các điểm sau:
+
+*   **Theo dõi đồng ruộng thường xuyên:** Thường xuyên thăm đồng để nắm bắt tình hình phát sinh, gây hại của mọt nước, đặc biệt là trên các trà lúa mới gieo cấy và giai đoạn đẻ nhánh [S1, S2].
+*   **Kiểm tra mật độ:** Lấy mẫu kiểm tra mật độ mọt nước trên đồng ruộng để có biện pháp xử lý kịp thời khi mật độ cao [S2].
+*   **Tuyên truyền và tập huấn:** Tăng cường tuyên truyền, tập huấn, hướng dẫn nông dân thực hiện tốt công tác thăm đồng và áp dụng các biện pháp kỹ thuật phòng chống mọt nước [S2].
+*   **Quan sát triệu chứng:** Chú ý các triệu chứng như ""cồi bạc"" hoặc ""lá hành"" thay thế lá chét giữa, thân lúa bị phình thành bọng rỗng hình ống, cây lúa còi cọc, lá bị biến dạng, héo rũ, cong queo [S5]."
+33,small_brown_plant_hopper,Rầy nâu nhỏ gây ra những triệu chứng gì trên cây lúa?,"(Dung model du phong: gemini-2.5-flash-lite)
+
+Rầy nâu nhỏ gây ra các triệu chứng sau trên cây lúa:
+
+*   **Vàng, nâu và khô héo cây:** Rầy tập trung ở gốc cây phía trên mực nước, chích hút nhựa cây làm cây bị khô héo, có biểu hiện cháy xém gọi là ""hopper burn"" [S3].
+*   **Các mảng khô hình tròn:** Ban đầu xuất hiện các mảng vàng hình tròn, sau đó chuyển sang nâu do cây bị khô héo. Các mảng này có thể lan rộng ra toàn ruộng [S3].
+*   **Ảnh hưởng đến quá trình tạo hạt:** Việc chích hút liên tục của rầy làm ảnh hưởng lớn đến khả năng tạo hạt của lúa [S3].
+*   **Làm cây bị bệnh:** Rầy nâu nhỏ là môi giới truyền bệnh virus như bệnh lùn sọc, bệnh vàng lùn [S3]."
+34,small_brown_plant_hopper,Làm thế nào để nhận biết ruộng lúa đang bị rầy nâu nhỏ gây hại?,"(Dung model du phong: gemini-2.5-flash-lite)
+
+Để nhận biết ruộng lúa bị rầy nâu nhỏ gây hại, bạn có thể quan sát các dấu hiệu sau:
+
+*   **Triệu chứng trên cây lúa:**
+    *   Cây lúa có hiện tượng vàng lá, sau đó chuyển sang màu nâu và khô héo, gọi là ""cháy rầy"" (hopper burn) [S3].
+    *   Xuất hiện các vệt hoặc chòm khô cháy xen kẽ trong ruộng, ban đầu có hình tròn, sau đó có thể lan rộng ra cả ruộng [S3].
+    *   Cây lúa bị hại nặng có thể bị héo rũ hoàn toàn và trông như bị cháy [S3].
+*   **Sự hiện diện của rầy:**
+    *   Rầy non (ấu trùng) và rầy trưởng thành thường tập trung ở gốc cây lúa, phía trên mặt nước [S3].
+    *   Quan sát kỹ có thể thấy rầy non và rầy trưởng thành bám ở gốc thân [S3].
+
+Rầy nâu nhỏ chủ yếu chích hút nhựa cây ở phần thân, đặc biệt là mạch phloem, gây ra hiện tượng cháy rầy. Chúng cũng là tác nhân truyền bệnh cho cây lúa [S3]."
+35,small_brown_plant_hopper,Tôi nên áp dụng biện pháp nào để quản lý rầy nâu nhỏ?,"(Dung model du phong: gemini-2.5-flash-lite)
+
+Để quản lý rầy nâu nhỏ, bạn có thể áp dụng các biện pháp sau:
+
+*   **Thăm đồng thường xuyên:** Kiểm tra đồng ruộng để phát hiện sớm sự xuất hiện và gây hại của rầy [S2].
+*   **Quản lý nước:** Thực hiện rút nước tối thiểu 2 lần trong vụ, mỗi lần rút nước sau bón phân thúc 5-7 ngày và đảm bảo ruộng khô liên tục 3 ngày [S1].
+*   **Sử dụng thuốc đặc hiệu:** Khi mật độ rầy cao, sử dụng thuốc đặc hiệu theo nguyên tắc 4 đúng (đúng thuốc, đúng liều lượng, đúng lúc, đúng cách) [S2].
+*   **Tuyên truyền, tập huấn:** Tăng cường tuyên truyền, tập huấn cho nông dân về các biện pháp phòng chống rầy [S2], [S5]."
+36,small_brown_plant_hopper,Cần lưu ý gì để phòng ngừa rầy nâu nhỏ?,"(Dung model du phong: gemini-2.5-flash-lite)
+
+Để phòng ngừa rầy nâu nhỏ, bạn cần lưu ý các điểm sau:
+
+*   **Theo dõi trưởng thành bướm:** Thường xuyên kiểm tra bướm cuốn lá để phát hiện sớm sự xuất hiện của sâu non [S1].
+*   **Phát hiện sâu non:** Theo dõi kỹ bộ lá đòng, vì sâu non gây hại bộ lá này sẽ ảnh hưởng lớn đến năng suất [S1].
+*   **Ngưỡng phòng trừ:** Khi mật độ sâu non đạt từ 10 con/m² trở lên thì cần tiến hành phun thuốc [S1]."
+37,yellow_rice_borer,Sâu đục thân vàng gây ra những triệu chứng gì trên cây lúa?,"(Dung model du phong: gemini-2.5-flash-lite)
+
+Sâu đục thân vàng gây ra các triệu chứng sau trên cây lúa:
+
+*   Sự xuất hiện của chồi bạc hay còn gọi là ""lá hành"" thay cho lá chét ở giữa [S4].
+*   Hình thành một hốc rỗng hoặc ống rỗng ở gốc của thân bị nhiễm [S4].
+*   Các thân bị nhiễm bệnh ức chế sự phát triển của lá và không tạo ra bông [S4].
+*   Cây bị còi cọc, lá biến dạng, héo rũ và cuộn lại [S4].
+*   Sự hiện diện của chồi hình dạng giống củ hành hoặc chồi bạc [S4].
+*   Sự hiện diện của các ống rỗng [S4]."
+38,yellow_rice_borer,Làm thế nào để nhận biết ruộng lúa đang bị sâu đục thân vàng gây hại?,"(Dung model du phong: gemini-2.5-flash-lite)
+
+Để nhận biết ruộng lúa bị sâu đục thân vàng gây hại, bạn cần quan sát các dấu hiệu sau:
+
+*   **Triệu chứng chính:** Xuất hiện ""cồi"" hoặc ""lá chóp"" màu bạc thay cho lá chét ở giữa [S3].
+*   **Thời điểm xuất hiện:** Triệu chứng có thể thấy từ giai đoạn mạ cho đến giai đoạn ra hoa [S3].
+*   **Biểu hiện trên thân:** Hình thành một hốc rỗng hoặc ống rỗng ở gốc của chồi bị nhiễm [S3].
+*   **Ảnh hưởng đến cây:** Chồi bị nhiễm bệnh sẽ ức chế sinh trưởng lá và không tạo ra bông [S3]. Cây có thể bị còi cọc, lá biến dạng, héo rũ và cuộn lại [S3]."
+39,yellow_rice_borer,Tôi nên áp dụng biện pháp nào để quản lý sâu đục thân vàng?,"(Dung model du phong: gemini-2.5-flash-lite)
+
+Để quản lý sâu đục thân vàng, bạn có thể áp dụng các biện pháp sau:
+
+*   **Kiểm soát bọ trưởng thành:** Sử dụng thuốc bảo vệ thực vật đã đăng ký để diệt bọ trưởng thành trước khi chúng đẻ trứng [S4].
+*   **Quản lý nước:** Rút nước ruộng tối thiểu 2 lần trong vụ, mỗi lần rút nước sau bón phân thúc 5-7 ngày và giữ ruộng khô ít nhất 3 ngày liên tục [S1]. Đối với vùng trũng hoặc mưa nhiều, rút nước tối thiểu 1 lần trong giai đoạn 28-50 ngày sau sạ và giữ ruộng khô 3 ngày liên tục [S1].
+*   **Thăm đồng thường xuyên:** Theo dõi diễn biến sâu bệnh trên đồng ruộng để có biện pháp phòng trừ kịp thời [S2]."
+40,yellow_rice_borer,Cần lưu ý gì để phòng ngừa sâu đục thân vàng?,"(Dung model du phong: gemini-2.5-flash-lite)
+
+Để phòng ngừa sâu đục thân vàng (rice water weevil), bạn cần lưu ý các điểm sau:
+
+*   **Quản lý nước:** Rút nước ruộng theo định kỳ, đảm bảo ruộng khô ít nhất 3 ngày liên tục để ngăn chặn sâu phát triển [S1].
+*   **Thời điểm xử lý:** Cần kiểm soát sâu trưởng thành trước khi chúng đẻ trứng [S6].
+*   **Sử dụng thuốc bảo vệ thực vật:** Nếu cần sử dụng thuốc, hãy áp dụng đúng thời điểm và tuân thủ nguyên tắc 4 đúng (đúng thuốc, đúng nồng độ, đúng lúc, đúng cách) [S4]. Nên tham khảo nhãn mác bao bì để biết liều lượng và cách dùng cụ thể."
