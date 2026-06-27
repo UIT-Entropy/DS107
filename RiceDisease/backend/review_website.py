@@ -7,12 +7,12 @@ What this script does:
 - uploads one sample image to /predict to verify the YOLO flow
 
 Run from the repo root:
-    C:/Python314/python.exe backend/review_website.py
+    python RiceDisease/backend/review_website.py
 
 Optional args:
     --frontend-url http://localhost:5173
     --backend-url http://localhost:8000
-    --image backend/uploads/02926.jpg
+    --image RiceDisease/backend/uploads/02926.jpg
 """
 
 from __future__ import annotations
@@ -30,9 +30,12 @@ from urllib.request import Request, urlopen
 from uuid import uuid4
 
 
+BACKEND_ROOT = Path(__file__).resolve().parent
+WEB_ROOT = BACKEND_ROOT.parent
+REPO_ROOT = WEB_ROOT.parent
+
 DEFAULT_FRONTEND_URL = "http://localhost:5173"
 DEFAULT_BACKEND_URL = "http://localhost:8000"
-DEFAULT_IMAGE_GLOB = "backend/uploads/*.jpg"
 
 
 PRESENTATION_SCRIPT = [
@@ -234,9 +237,12 @@ def check_prediction(base_url: str, image_path: Path) -> CheckResult:
 
 def choose_sample_image(explicit: str | None) -> Path | None:
     if explicit:
-        return Path(explicit)
+        path = Path(explicit)
+        if path.is_absolute() or path.exists():
+            return path
+        return REPO_ROOT / path
 
-    candidates = sorted(Path("backend/uploads").glob("*.jpg"))
+    candidates = sorted((BACKEND_ROOT / "uploads").glob("*.jpg"))
     if candidates:
         return candidates[0]
 

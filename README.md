@@ -5,13 +5,73 @@ This repository contains the implementation and paper artifacts for a DS107 proj
 ## Repository Layout
 
 ```text
-DS107.tex                    ACL-style paper source
-Training_Yolo/               Kaggle notebook for YOLO experiments
-Benchmark/                   Advisory retrieval and generation benchmark
-advisor/                     Gemini RAG advisor module
-rice_pest_crawler/           Knowledge-base crawler and chunk builder
-RiceDisease/                 React + FastAPI web app integration
+README.md                         top-level setup, demo, and submission guide
+Training_Yolo/                    Kaggle notebook for YOLO training experiments
+Benchmark/                        retrieval/generation benchmark scripts and CSV results
+advisor/                          Gemini RAG advisor package
+  core/                           advisor orchestration and chat sessions
+  embedding/                      embedding index storage and vector search
+  gemini/                         Gemini client and retry helpers
+  prompts/                        system prompt and prompt builder
+  reranker/                       pest-domain reranking logic
+  tests/                          offline advisor tests
+rice_pest_crawler/                crawler and RAG knowledge-base builder
+  config/                         source, crawler, and pest taxonomy configs
+  scripts/                        runnable crawl/extract/chunk/audit scripts
+  src/crawler/                    crawler implementation
+  data/parsed/                    parsed source documents used by the project
+  data/rag/                       final RAG chunks consumed by the advisor
+  tests/                          crawler tests
+RiceDisease/                      integrated web demo
+  backend/                        FastAPI API for YOLO prediction and RAG chat
+  frontend/                       React + Vite chat UI
+  DS107_CVModule-main/            YOLO11s inference module and selected weight
 ```
+
+Source of truth:
+
+- RAG code lives in root `advisor/`.
+- Knowledge-base chunks live in root `rice_pest_crawler/data/rag/`.
+- Web code lives in `RiceDisease/backend/` and `RiceDisease/frontend/`.
+- YOLO inference code and the selected weight live in `RiceDisease/DS107_CVModule-main/`.
+
+The old nested copy `RiceDisease/DS107-main/` is not part of the submission source and should not be used.
+
+## Submission Package
+
+Keep these items in the zip/package:
+
+```text
+README.md
+Training_Yolo/
+Benchmark/
+advisor/
+rice_pest_crawler/
+RiceDisease/backend/
+RiceDisease/frontend/
+RiceDisease/DS107_CVModule-main/
+```
+
+Do not include generated local files:
+
+```text
+.venv/
+venv/
+.pytest_cache/
+__pycache__/
+RiceDisease/frontend/node_modules/
+RiceDisease/frontend/dist/
+RiceDisease/backend/uploads/
+RiceDisease/DS107_CVModule-main/cache/
+advisor/data/gemini_embeddings.jsonl
+advisor/data/gemini_embeddings.jsonl.meta.json
+advisor/data/sessions/
+rice_pest_crawler/data/raw/
+rice_pest_crawler/data/logs/*.jsonl
+RiceDisease/DS107-main/
+```
+
+`advisor/api_key.py` must contain only the placeholder in the submitted package. Put a real Gemini API key there only on the demo machine, and do not commit or submit the real key.
 
 ## Current Paper Scope
 
@@ -24,7 +84,7 @@ The paper evaluates:
 - Retrieval metrics: Class Hit@5, Section Hit@5, and MRR@5.
 - Generation metrics: ROUGE-L, BERTScore, and semantic similarity.
 
-The latest paper source is in `DS107.tex`.
+The report source is not included in the submission package; this repository focuses on code, data artifacts, and reproducible demo/benchmark instructions.
 
 ## Setup
 
@@ -33,6 +93,7 @@ From the repository root:
 ```powershell
 python -m pip install -r advisor\requirements.txt
 python -m pip install -r rice_pest_crawler\requirements.txt
+python -m pip install -r Benchmark\requirements.txt
 ```
 
 On Linux/macOS:
@@ -40,6 +101,7 @@ On Linux/macOS:
 ```bash
 python -m pip install -r advisor/requirements.txt
 python -m pip install -r rice_pest_crawler/requirements.txt
+python -m pip install -r Benchmark/requirements.txt
 ```
 
 ## Gemini API Key
@@ -121,7 +183,7 @@ python advisor\gemini_rag.py sessions delete field-001
 
 ## Advisory Benchmark
 
-Benchmark artifacts are stored in `Benchmark/`.
+Benchmark artifacts are stored in `Benchmark/`. See `Benchmark/README.md` for the folder-level reproduction guide.
 
 Important files:
 
@@ -175,31 +237,108 @@ Key settings reflected in the paper:
 
 ## Web App Integration
 
-The integrated demo app is in `RiceDisease/`.
+The integrated demo app is in `RiceDisease/`. For folder-level details, see `RiceDisease/README.md`.
 
 ```text
-RiceDisease/backend/                 FastAPI API for prediction and chat
-RiceDisease/frontend/                React + Vite chat interface
+RiceDisease/backend/                 FastAPI API for YOLO prediction and RAG chat
+RiceDisease/frontend/                React + Vite chat UI
 RiceDisease/DS107_CVModule-main/     YOLO11s inference wrapper and selected weight
 ```
 
-The backend imports the repository-root `advisor/` module directly. The older copied folder `RiceDisease/DS107-main/` is ignored and should not be used as the source of truth.
+Path convention:
 
-Run the backend:
-
-```powershell
-cd RiceDisease\backend
-python -m pip install -r requirements.txt
-python -m uvicorn main:app --reload
+```text
+advisor/                         source of truth for Gemini RAG
+rice_pest_crawler/                source of truth for RAG chunks
+RiceDisease/DS107_CVModule-main/  source of truth for YOLO inference
+RiceDisease/backend/uploads/      runtime upload folder, ignored by git
+RiceDisease/DS107_CVModule-main/cache/ runtime bbox/cache folder, ignored by git
+advisor/data/sessions/            runtime chat sessions, ignored by git
 ```
 
-Run the frontend:
+The backend imports the repository-root `advisor/` and `rice_pest_crawler/` modules directly.
+
+### Web Demo Prerequisites
+
+- Python 3.10+ with `pip`
+- Node.js and npm
+- A Gemini API key in `advisor/api_key.py`
+- The selected YOLO weight at `RiceDisease/DS107_CVModule-main/E08_yolo11s_img416_default_best.pt`
+- RAG chunks at `rice_pest_crawler/data/rag/all_chunks.jsonl`
+
+Install backend dependencies from the repository root:
+
+```powershell
+python -m pip install -r RiceDisease\backend\requirements.txt
+```
+
+Install frontend dependencies:
 
 ```powershell
 cd RiceDisease\frontend
 npm install
-npm run dev
+cd ..\..
 ```
+
+Build the advisor index once before the first full RAG demo:
+
+```powershell
+python advisor\gemini_rag.py build-index
+python advisor\gemini_rag.py index-info
+```
+
+For a quick smoke test, use a tiny index:
+
+```powershell
+python advisor\gemini_rag.py build-index --limit 10
+```
+
+### Run The Web Demo
+
+Terminal 1, backend:
+
+```powershell
+python -m uvicorn RiceDisease.backend.main:app --reload --host 127.0.0.1 --port 8000
+```
+
+Backend checks:
+
+```text
+http://127.0.0.1:8000/
+http://127.0.0.1:8000/docs
+http://127.0.0.1:8000/models
+```
+
+Terminal 2, frontend:
+
+```powershell
+cd RiceDisease\frontend
+$env:VITE_API_BASE_URL="http://127.0.0.1:8000"
+npm run dev -- --host 127.0.0.1 --port 5173
+```
+
+Open:
+
+```text
+http://127.0.0.1:5173
+```
+
+Suggested demo script:
+
+1. Upload one rice pest image in the chat.
+2. Show the YOLO class, confidence, and annotated image returned by the backend.
+3. Ask a follow-up question such as `Nen xu ly sau nay nhu the nao?`.
+4. Show that the answer uses the same session, pest prior, and RAG sources.
+5. Open `http://127.0.0.1:8000/docs` if the teacher wants to inspect the API.
+
+Optional runtime path overrides:
+
+```powershell
+$env:RICECARE_UPLOAD_DIR="RiceDisease/backend/uploads"
+$env:RICECARE_CACHE_DIR="RiceDisease/DS107_CVModule-main/cache"
+```
+
+Relative override paths are resolved from the repository root.
 
 ## Knowledge Base Crawler
 

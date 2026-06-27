@@ -184,6 +184,16 @@ def _env_float(name: str, default: float) -> float:
     return float(value) if value else default
 
 
+def _clean_api_key(value: str) -> str:
+    value = value.strip()
+    placeholders = {
+        "",
+        "your_gemini_api_key_here",
+        "your_real_gemini_api_key",
+    }
+    return "" if value.lower() in placeholders else value
+
+
 def load_config(
     *,
     chunks_path: str | Path | None = None,
@@ -209,7 +219,7 @@ def load_config(
 
     return AdvisorConfig(
         paths=paths,
-        api_key=GEMINI_API_KEY.strip(),
+        api_key=_clean_api_key(GEMINI_API_KEY),
         model_profile=profile_name,
         embedding_model=os.getenv("GEMINI_EMBEDDING_MODEL", profile["embedding_model"]),
         generation_model=os.getenv("GEMINI_GENERATION_MODEL", profile["generation_model"]),

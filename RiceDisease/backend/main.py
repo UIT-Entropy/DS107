@@ -4,22 +4,21 @@ from dataclasses import replace
 from pathlib import Path
 from typing import List
 import shutil
-import sys
 import traceback
 import uuid
 
-from fastapi import FastAPI, File, UploadFile
+from fastapi import FastAPI, File, Request, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
+try:
+    from .paths import CACHE_DIR, UPLOAD_DIR, add_project_import_paths, validate_project_paths
+except ImportError:
+    from paths import CACHE_DIR, UPLOAD_DIR, add_project_import_paths, validate_project_paths
 
-APP_ROOT = Path(__file__).resolve().parent.parent
-REPO_ROOT = APP_ROOT.parent
-CV_MODULE_ROOT = APP_ROOT / "DS107_CVModule-main"
-
-sys.path.insert(0, str(REPO_ROOT))
-sys.path.insert(0, str(CV_MODULE_ROOT))
+validate_project_paths()
+add_project_import_paths()
 
 from advisor.config import load_config  # noqa: E402
 from advisor.core.advisor import RicePestAdvisor  # noqa: E402
@@ -63,35 +62,64 @@ ANSWER_MODES = {
         "models": ["gemini-2.5-flash-lite"],
         "top_k": 4,
         "candidate_k": 12,
-        "max_output_tokens": 1100,
+        "max_output_tokens": 1800,
     },
     "standard": {
         "label": "Standard",
-        "models": ["gemini-2.5-flash-lite"],
-        "top_k": 4,
-        "candidate_k": 12,
-        "max_output_tokens": 1100,
+        "models": ["gemini-2.5-flash"],
+        "top_k": 6,
+        "candidate_k": 24,
+        "max_output_tokens": 2600,
     },
     "deep": {
         "label": "Deep",
         "models": ["gemini-2.5-flash"],
-        "top_k": 6,
-        "candidate_k": 24,
-        "max_output_tokens": 1300,
+        "top_k": 8,
+        "candidate_k": 32,
+        "max_output_tokens": 3600,
     },
     "compare": {
         "label": "Compare",
         "models": ["gemini-2.5-flash-lite", "gemini-3.5-flash"],
         "top_k": 6,
         "candidate_k": 24,
-        "max_output_tokens": 1100,
+        "max_output_tokens": 2200,
     },
 }
 
-UPLOAD_DIR = Path(__file__).resolve().parent / "uploads"
+MODE_PROMPT_INSTRUCTIONS = {
+    "fast": "\n".join(
+        [
+            "Do dai che do Fast: tra loi ngan gon nhung phai tron y, khong duoc dung cut ngang.",
+            "Neu cau hoi hoi ca 'gay hai' va 'xu ly', bat buoc co 2 muc: 'Cach gay hai' va 'Huong xu ly'.",
+            "Moi muc co 2-3 bullet thuc dung, gan citation [S1] khi y lay tu context.",
+        ]
+    ),
+    "standard": "\n".join(
+        [
+            "Do dai che do Standard: tra loi day du de nguoi xem demo thay ro gia tri cua RAG.",
+            "Bat buoc co 4 muc: 'Nhan dinh nhanh', 'Cach gay hai', 'Huong xu ly/IPM', 'Luu y khi ap dung'.",
+            "Viet khoang 8-12 bullet tong cong; moi bullet nen la mot hanh dong/nhan dinh cu the.",
+            "Neu context du thong tin, khong tra loi qua ngan; uu tien giai thich bang tieng Viet tu nhien.",
+            "Gan citation [S1], [S2] cho cac y quan trong lay tu context.",
+        ]
+    ),
+    "deep": "\n".join(
+        [
+            "Do dai che do Deep: tra loi chi tiet hon Standard.",
+            "Bat buoc co cac muc: 'Nhan dinh tu YOLO', 'Trieu chung va cach gay hai', 'Kiem tra ngoai dong', 'Huong xu ly/IPM', 'Canh bao va thong tin can hoi them'.",
+            "Viet khoang 12-16 bullet tong cong, uu tien thong tin co citation.",
+        ]
+    ),
+    "compare": "\n".join(
+        [
+            "Do dai che do Compare: moi model tra loi theo cau truc Standard, du y va co citation.",
+        ]
+    ),
+}
+
 UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
 
-CACHE_DIR = CV_MODULE_ROOT / "cache"
 CACHE_DIR.mkdir(parents=True, exist_ok=True)
 
 app.mount("/cache", StaticFiles(directory=str(CACHE_DIR)), name="cache")
@@ -173,13 +201,13 @@ def models():
     }
 
 
-def format_prediction_response(result: dict, session_id: str | None):
+def format_prediction_response(result: dict, session_id: str | None, request: Request):
     summary = result.get("summary", {})
     annotated_file = result.get("annotated_image")
     image_url = None
 
     if annotated_file:
-        image_url = f"http://localhost:8000/cache/bbox/{Path(annotated_file).name}"
+        image_url = str(request.url_for("cache", path=f"bbox/{Path(annotated_file).name}"))
 
     return {
         "success": True,
@@ -228,6 +256,10 @@ def mode_profile(mode: str | None) -> dict:
     return ANSWER_MODES.get(mode or "standard", ANSWER_MODES["standard"])
 
 
+def mode_prompt_instruction(mode: str | None) -> str:
+    return MODE_PROMPT_INSTRUCTIONS.get(mode or "standard", MODE_PROMPT_INSTRUCTIONS["standard"])
+
+
 def selected_models(models: list[str] | None, mode: str | None) -> list[str]:
     cleaned = []
     requested_models = models or mode_profile(mode)["models"]
@@ -256,12 +288,13 @@ def ensure_session(session_id: str):
 
 def serialize_sources(sources):
     rows = []
+    excerpt_limit = 160
 
     for source in sources:
         chunk = source.chunk
         text = str(chunk.get("text") or "").strip()
-        excerpt = text[:320].rstrip()
-        if len(text) > 320:
+        excerpt = text[:excerpt_limit].rstrip()
+        if len(text) > excerpt_limit:
             excerpt += "..."
 
         rows.append(
@@ -293,7 +326,13 @@ def answer_with_models(req: AskRequest):
         top_k=profile_config["top_k"],
         candidate_k=profile_config["candidate_k"],
     )
-    prompt = build_user_prompt(req.question, sources, history=history, profile=profile)
+    prompt = "\n\n".join(
+        [
+            build_user_prompt(req.question, sources, history=history, profile=profile),
+            "YEU CAU DO DAI VA CAU TRUC THEO CHE DO:",
+            mode_prompt_instruction(req.mode),
+        ]
+    )
     system_instruction = load_system_prompt(advisor_config.paths.system_prompt_path)
     answers = []
 
@@ -346,7 +385,7 @@ def answer_with_models(req: AskRequest):
 
 
 @app.post("/predict")
-async def predict(file: UploadFile = File(...)):
+async def predict(request: Request, file: UploadFile = File(...)):
     try:
         image_path = save_upload(file)
         result = classify_image(
@@ -355,14 +394,14 @@ async def predict(file: UploadFile = File(...)):
             include_ds107_payload=True,
         )
         session_id = create_session(result, image_path)
-        return format_prediction_response(result, session_id)
+        return format_prediction_response(result, session_id, request)
     except Exception as exc:
         traceback.print_exc()
         return {"success": False, "error": str(exc)}
 
 
 @app.post("/predict-multiple")
-async def predict_multiple(files: List[UploadFile] = File(...)):
+async def predict_multiple(request: Request, files: List[UploadFile] = File(...)):
     results = []
 
     for file in files:
@@ -374,7 +413,7 @@ async def predict_multiple(files: List[UploadFile] = File(...)):
                 include_ds107_payload=True,
             )
             session_id = create_session(result, image_path)
-            response = format_prediction_response(result, session_id)
+            response = format_prediction_response(result, session_id, request)
             response["filename"] = file.filename
             results.append(response)
         except Exception as exc:

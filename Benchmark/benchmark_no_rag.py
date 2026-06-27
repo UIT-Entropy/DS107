@@ -9,9 +9,7 @@ if str(PROJECT_ROOT) not in sys.path:
 from pathlib import Path
 import pandas as pd
 
-from advisor.core.advisor_no_rag import (
-    RicePestAdvisorNoRAG
-)
+from advisor_no_rag import RicePestAdvisorNoRAG
 
 INPUT_FILE = "benchmark_questions.csv"
 OUTPUT_FILE = "no_rag_answers.csv"

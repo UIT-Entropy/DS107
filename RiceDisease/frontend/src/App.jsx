@@ -13,17 +13,17 @@ const ANSWER_MODES = [
   {
     id: "fast",
     label: "Fast",
-    detail: "Gemini Flash-Lite, compact answer, default DS107 profile.",
+    detail: "Quick answer with the required damage and action points.",
   },
   {
     id: "standard",
     label: "Standard",
-    detail: "Same DS107 default profile with source-grounded RAG.",
+    detail: "Full demo answer with diagnosis, damage, IPM actions, and notes.",
   },
   {
     id: "deep",
     label: "Deep",
-    detail: "More retrieved chunks and a longer answer budget.",
+    detail: "More retrieved chunks and a longer field-advisory answer.",
   },
   {
     id: "compare",

@@ -1,4 +1,6 @@
 .pytest_cache/
+.tmp_pytest/
+.agents/
 __pycache__/
 **/__pycache__/
 .env
